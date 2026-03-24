@@ -4,6 +4,7 @@ import { bmiCategory } from '../lib/fitness';
 import WeightChart from '../components/WeightChart';
 import { CheckCircle, Plus, Beef, Wheat, Droplets } from 'lucide-react';
 import InfoTooltip from '../components/InfoTooltip';
+import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss', hypertrophy: 'Hypertrophy', endurance: 'Endurance', maintenance: 'Maintenance' };
@@ -45,7 +46,10 @@ export default function Dashboard() {
     return Math.min(100, Math.round((done / total) * 100));
   })();
 
+  const handleRefresh = () => new Promise((res) => setTimeout(res, 800));
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="max-w-lg mx-auto p-5 space-y-5">
       {/* Header */}
       <div className="pt-4">
@@ -150,5 +154,6 @@ export default function Dashboard() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
