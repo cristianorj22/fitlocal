@@ -15,15 +15,33 @@ export default function Progress() {
 
   if (!profile) return null;
 
-  const handlePhoto = (e) => {
+  // Compress + resize before storing to avoid localStorage quota exhaustion.
+  // Uses a canvas to cap width at 1024px and encode as JPEG @ 75% quality.
+  const compressImage = (file) =>
+    new Promise((resolve) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        const MAX_W = 1024;
+        const scale = Math.min(1, MAX_W / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(objectUrl); // immediately release the blob URL
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.src = objectUrl;
+    });
+
+  const handlePhoto = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      savePhoto.mutate({ dataUrl: ev.target.result, note });
-      setNote('');
-    };
-    reader.readAsDataURL(file);
+    const dataUrl = await compressImage(file);
+    savePhoto.mutate({ dataUrl, note });
+    setNote('');
+    // Reset input so the same file can be re-selected
+    e.target.value = '';
   };
 
   const handleDelete = (i) => {

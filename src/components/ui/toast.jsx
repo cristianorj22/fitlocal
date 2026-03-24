@@ -15,6 +15,10 @@ ToastProvider.displayName = "ToastProvider";
 const ToastViewport = React.forwardRef(({ ...props }, ref) => (
   <div
     ref={ref}
+    role="region"
+    aria-label="Notifications"
+    aria-live="polite"
+    aria-atomic="false"
     className="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
     {...props}
   />
@@ -41,6 +45,9 @@ const Toast = React.forwardRef(({ className, variant, ...props }, ref) => {
   return (
     <div
       ref={ref}
+      role={variant === 'destructive' ? 'alert' : 'status'}
+      aria-live={variant === 'destructive' ? 'assertive' : 'polite'}
+      aria-atomic="true"
       className={cn(toastVariants({ variant }), className)}
       {...props}
     />
@@ -63,6 +70,7 @@ ToastAction.displayName = "ToastAction";
 const ToastClose = React.forwardRef(({ className, ...props }, ref) => (
   <button
     ref={ref}
+    aria-label="Dismiss notification"
     className={cn(
       "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
       className
@@ -101,4 +109,4 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
-}; 
+};

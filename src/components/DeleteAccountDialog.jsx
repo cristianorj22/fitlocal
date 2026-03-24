@@ -16,14 +16,20 @@ export default function DeleteAccountDialog({ onClose, onConfirm }) {
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-sm bg-gray-900 border border-gray-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-desc"
+        className="relative w-full max-w-sm bg-gray-900 border border-gray-800 rounded-3xl overflow-hidden shadow-2xl"
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-gray-800">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-red-500/20 flex items-center justify-center">
               <Trash2 className="w-4 h-4 text-red-400" />
             </div>
-            <span className="font-semibold">Delete All Data</span>
+            <span id="delete-dialog-title" className="font-semibold">Delete All Data</span>
           </div>
           <button aria-label="Close dialog" onClick={onClose} className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-gray-800 transition-colors">
             <X className="w-4 h-4 text-gray-500" />
@@ -41,7 +47,11 @@ export default function DeleteAccountDialog({ onClose, onConfirm }) {
         <div className="p-5 space-y-4">
           {step === 0 && (
             <>
-              <div className="flex gap-3 bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
+              <div
+                id="delete-dialog-desc"
+                aria-live="assertive"
+                className="flex gap-3 bg-red-500/10 border border-red-500/20 rounded-2xl p-4"
+              >
                 <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-gray-300 space-y-1">
                   <p className="font-semibold text-red-300">This action is permanent.</p>

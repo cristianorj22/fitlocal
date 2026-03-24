@@ -56,18 +56,20 @@ export default function AppLayout() {
     }
   };
 
-  // Android hardware back
+  // Android hardware back — reference tabStacks ref directly to avoid stale closure
   useEffect(() => {
-    const onPopState = (e) => {
-      const stack = tabStacks.current[currentTab];
-      if (stack.length > 1) {
-        e.preventDefault();
-        handleBack();
+    const onPopState = () => {
+      const tab = getOwnerTab(window.location.pathname);
+      const stack = tabStacks.current[tab];
+      if (stack && stack.length > 1) {
+        tabStacks.current[tab] = stack.slice(0, -1);
+        navigate(stack[stack.length - 2]);
       }
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
-  }, [location.pathname]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -121,6 +123,8 @@ export default function AppLayout() {
           {NAV.map(({ to, icon: Icon, label }) => (
             <button
               key={to}
+              aria-label={label}
+              aria-current={currentTab === to ? 'page' : undefined}
               onClick={() => handleTabPress(to)}
               className={`flex-1 flex flex-col items-center py-3 gap-1 text-xs transition-colors min-h-[56px] ${
                 currentTab === to ? 'text-emerald-400' : 'text-gray-500'

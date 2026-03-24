@@ -53,14 +53,24 @@ export function getTodayCheckedIn() {
   return getCheckIns().includes(today);
 }
 
+const MAX_PHOTOS = 30;
+
 export function getPhotos() {
   return storage.get('photos', []);
 }
 
 export function savePhoto(dataUrl, note = '') {
   const photos = getPhotos();
+  // Evict oldest if at cap to prevent unbounded localStorage growth
+  if (photos.length >= MAX_PHOTOS) photos.shift();
   photos.push({ date: new Date().toISOString(), dataUrl, note });
-  storage.set('photos', photos);
+  try {
+    storage.set('photos', photos);
+  } catch {
+    // QuotaExceededError — remove oldest entry and retry once
+    photos.shift();
+    try { storage.set('photos', photos); } catch {}
+  }
 }
 
 export function deletePhoto(index) {
