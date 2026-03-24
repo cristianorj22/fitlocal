@@ -3,9 +3,13 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-// Add page imports here
+import Onboarding from './pages/Onboarding';
+import Dashboard from './pages/Dashboard';
+import Workout from './pages/Workout';
+import Progress from './pages/Progress';
+import Profile from './pages/Profile';
+import AppLayout from './components/AppLayout';
+import { getProfile } from './lib/storage';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -31,9 +35,18 @@ const AuthenticatedApp = () => {
   }
 
   // Render the main app
+  const profile = getProfile();
+  if (!profile) return <Onboarding />;
+
   return (
     <Routes>
-      {/* Add your page Route elements here */}
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/workout" element={<Workout />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
+      <Route path="/onboarding" element={<Onboarding />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
