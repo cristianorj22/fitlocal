@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { createContext, useContext, useEffect, useRef } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Dumbbell, TrendingUp, User, ChevronLeft } from 'lucide-react';
 
@@ -13,39 +13,63 @@ const NAV = [
 const ROOT_TABS = ['/', '/workout', '/progress', '/profile'];
 
 function getOwnerTab(pathname) {
-  // Return which root tab "owns" the current path
   const match = ROOT_TABS.find((t) => t !== '/' && pathname.startsWith(t));
   return match ?? '/';
 }
+
+// Build initial stacks — deep-link safe: always roots the stack at the tab root
+function buildInitialStacks(pathname) {
+  const stacks = Object.fromEntries(ROOT_TABS.map((t) => [t, [t]]));
+  const tab = getOwnerTab(pathname);
+  if (pathname !== tab) stacks[tab] = [tab, pathname];
+  return stacks;
+}
+
+const NavContext = createContext(null);
+/** Access back-navigation from any child component */
+export const useAppNav = () => useContext(NavContext);
 
 export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Track only the last visited sub-path per tab (not a full stack).
-  // We let the browser's native history API own the actual history — this
-  // ref only remembers "where the user was" so switching tabs restores position.
-  const lastTabPath = useRef(
-    Object.fromEntries(ROOT_TABS.map((t) => [t, t]))
-  );
+  // Source-of-truth navigation stacks, one per tab.
+  // Initialised deep-link-safe: arriving at /workout/x pre-populates ['/workout', '/workout/x']
+  const tabStacks = useRef(buildInitialStacks(location.pathname));
 
   const currentTab = getOwnerTab(location.pathname);
   const isRootTab = ROOT_TABS.includes(location.pathname);
 
-  // Keep last-path record in sync on every navigation
+  // Push new paths onto the owning tab's stack
   useEffect(() => {
-    lastTabPath.current[currentTab] = location.pathname;
+    const stack = tabStacks.current[currentTab];
+    if (stack[stack.length - 1] !== location.pathname) {
+      tabStacks.current[currentTab] = [...stack, location.pathname];
+    }
   }, [location.pathname, currentTab]);
 
-  // Switch to a tab, resuming at last known sub-path
+  // Switch tabs, resuming at last known position within that tab
   const handleTabPress = (tabPath) => {
-    navigate(lastTabPath.current[tabPath] ?? tabPath);
+    const stack = tabStacks.current[tabPath];
+    navigate(stack[stack.length - 1] ?? tabPath);
   };
 
-  // Delegate back navigation entirely to the browser — no custom stack needed
-  const handleBack = () => navigate(-1);
+  // Pop our stack; use replace so browser history stays clean
+  const handleBack = () => {
+    const stack = tabStacks.current[currentTab];
+    if (stack.length > 1) {
+      tabStacks.current[currentTab] = stack.slice(0, -1);
+      navigate(stack[stack.length - 2], { replace: true });
+    } else {
+      // Fallback: always has a safe destination (tab root)
+      navigate(currentTab, { replace: true });
+    }
+  };
+
+  const navCtx = { handleBack, currentTab };
 
   return (
+    <NavContext.Provider value={navCtx}>
     <div
       className="min-h-screen bg-gray-950 text-white flex flex-col"
       style={{
@@ -111,5 +135,6 @@ export default function AppLayout() {
         </div>
       </nav>
     </div>
+    </NavContext.Provider>
   );
 }

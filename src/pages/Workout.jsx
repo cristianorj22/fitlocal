@@ -42,6 +42,8 @@ export default function Workout() {
         {plan.map((d, i) => (
           <button
             key={i}
+            aria-pressed={selectedDay === i}
+            aria-label={`Day ${d.day}${d.muscles?.length ? ': ' + d.muscles.join(', ') : ''}`}
             onClick={() => { setSelectedDay(i); setCompleted({}); setExpandedEx(null); }}
             className={`flex-shrink-0 px-4 py-3 min-h-[44px] rounded-xl text-sm font-medium transition-all ${selectedDay === i ? 'bg-emerald-500 text-white' : 'bg-gray-900 text-gray-400'}`}
           >
@@ -76,11 +78,16 @@ export default function Workout() {
           <div key={i} className={`bg-gray-900 rounded-2xl overflow-hidden border transition-all ${completed[ex.name] ? 'border-emerald-500/30 opacity-60' : 'border-gray-800'}`}>
             <button
               className="w-full flex items-center gap-2 p-4 text-left"
+              aria-expanded={expandedEx === i}
+              aria-controls={`ex-detail-${i}`}
               onClick={() => setExpandedEx(expandedEx === i ? null : i)}
             >
               <span
                 role="checkbox"
                 aria-checked={!!completed[ex.name]}
+                aria-label={`Mark ${ex.name} as ${completed[ex.name] ? 'incomplete' : 'complete'}`}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); toggleComplete(ex.name); } }}
                 onClick={(e) => { e.stopPropagation(); toggleComplete(ex.name); }}
                 className="flex-shrink-0 flex items-center justify-center w-11 h-11 -ml-2 cursor-pointer"
               >
@@ -100,7 +107,7 @@ export default function Workout() {
             </button>
 
             {expandedEx === i && (
-              <div className="px-4 pb-4 pt-0">
+              <div id={`ex-detail-${i}`} role="region" aria-label={`${ex.name} details`} className="px-4 pb-4 pt-0">
                 <p className="text-sm text-gray-400 border-t border-gray-800 pt-3">{ex.desc}</p>
               </div>
             )}
