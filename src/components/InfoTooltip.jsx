@@ -9,8 +9,8 @@ export default function InfoTooltip({ text }) {
       <button
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
-        onTouchStart={() => setShow((s) => !s)}
-        className="text-gray-600 hover:text-gray-400 transition-colors"
+        onTouchStart={(e) => { e.preventDefault(); setShow((s) => !s); }}
+        className="flex items-center justify-center w-[44px] h-[44px] -mx-[13px] text-gray-600 hover:text-gray-400 transition-colors"
       >
         <Info className="w-3.5 h-3.5" />
       </button>

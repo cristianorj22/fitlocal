@@ -69,7 +69,7 @@ export default function RestTimer({ defaultSeconds = 90 }) {
             {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             {running ? 'Pause' : 'Start'}
           </button>
-          <button onClick={reset} className="p-2 bg-gray-800 rounded-xl">
+          <button onClick={reset} className="p-3 min-w-[44px] min-h-[44px] bg-gray-800 rounded-xl flex items-center justify-center">
             <RotateCcw className="w-4 h-4 text-gray-400" />
           </button>
         </div>

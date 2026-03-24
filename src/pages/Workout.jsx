@@ -43,7 +43,7 @@ export default function Workout() {
           <button
             key={i}
             onClick={() => { setSelectedDay(i); setCompleted({}); setExpandedEx(null); }}
-            className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDay === i ? 'bg-emerald-500 text-white' : 'bg-gray-900 text-gray-400'}`}
+            className={`flex-shrink-0 px-4 py-3 min-h-[44px] rounded-xl text-sm font-medium transition-all ${selectedDay === i ? 'bg-emerald-500 text-white' : 'bg-gray-900 text-gray-400'}`}
           >
             Day {d.day}
           </button>
@@ -78,10 +78,13 @@ export default function Workout() {
               className="w-full flex items-center gap-4 p-4 text-left"
               onClick={() => setExpandedEx(expandedEx === i ? null : i)}
             >
-              <button
+              <span
                 onClick={(e) => { e.stopPropagation(); toggleComplete(ex.name); }}
-                className={`w-6 h-6 rounded-full border-2 flex-shrink-0 transition-all ${completed[ex.name] ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600'}`}
-              />
+                role="checkbox" aria-checked={!!completed[ex.name]}
+                className="flex-shrink-0 flex items-center justify-center w-11 h-11 -ml-2 cursor-pointer"
+              >
+                <span className={`w-6 h-6 rounded-full border-2 flex-shrink-0 transition-all ${completed[ex.name] ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600'}`}
+              /></span></span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">{ex.name}</span>

@@ -87,10 +87,10 @@ export default function Progress() {
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm text-gray-400">{new Date(photos[selected]?.date).toLocaleDateString()}</span>
               <div className="flex gap-3">
-                <button onClick={() => handleDelete(selected)} className="p-2 bg-red-500/20 rounded-lg">
+                <button onClick={() => handleDelete(selected)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg">
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
-                <button onClick={() => setSelected(null)} className="p-2 bg-gray-800 rounded-lg">
+                <button onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gray-800 rounded-lg">
                   <X className="w-4 h-4" />
                 </button>
               </div>
