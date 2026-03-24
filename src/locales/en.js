@@ -326,5 +326,22 @@ export default {
     20: 'Max effort sprints. 30s all-out, 60s active recovery.',
     21: 'Maintain a steady rhythm. Great for coordination and warm-up.',
   },
+  /** Keys: slug from English label (slashes & spaces → _). Used for day split tags + exercise category. */
+  muscleGroups: {
+    Legs: 'Legs',
+    Core: 'Core',
+    Chest: 'Chest',
+    Back: 'Back',
+    Shoulders: 'Shoulders',
+    Triceps: 'Triceps',
+    Biceps: 'Biceps',
+    Hamstrings: 'Hamstrings',
+    Calves: 'Calves',
+    Cardio: 'Cardio',
+    Full_Body: 'Full Body',
+    Legs_Core: 'Legs / Core',
+    Legs_Back: 'Legs / Back',
+    Chest_Triceps: 'Chest / Triceps',
+  },
   types: { compound: 'compound', isolation: 'isolation', cardio: 'cardio' },
 };

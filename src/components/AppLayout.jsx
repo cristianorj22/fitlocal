@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Dumbbell, TrendingUp, User, ChevronLeft } from 'lucide-react';
@@ -26,14 +26,17 @@ export const useAppNav = () => useContext(NavContext);
 export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
-  const NAV = [
-    { to: '/', icon: LayoutDashboard, label: t('nav.home') },
-    { to: '/workout', icon: Dumbbell, label: t('nav.workout') },
-    { to: '/progress', icon: TrendingUp, label: t('nav.progress') },
-    { to: '/profile', icon: User, label: t('nav.profile') },
-  ];
+  const NAV = useMemo(
+    () => [
+      { to: '/', icon: LayoutDashboard, label: t('nav.home') },
+      { to: '/workout', icon: Dumbbell, label: t('nav.workout') },
+      { to: '/progress', icon: TrendingUp, label: t('nav.progress') },
+      { to: '/profile', icon: User, label: t('nav.profile') },
+    ],
+    [locale, t],
+  );
 
   // Source-of-truth navigation stacks, one per tab.
   // Initialised deep-link-safe: arriving at /workout/x pre-populates ['/workout', '/workout/x']
@@ -112,6 +115,7 @@ export default function AppLayout() {
       </main>
 
       <nav
+        key={locale}
         className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border z-50"
         style={{
           paddingBottom: 'env(safe-area-inset-bottom)',

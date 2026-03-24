@@ -31,6 +31,19 @@ function exerciseDisplayDescription(ex, locale) {
   return ex.desc;
 }
 
+/** English muscle/split label from exercises → locale key slug (no slashes in path). */
+function muscleGroupKey(raw) {
+  return raw.replace(/[/\s]+/g, '_');
+}
+
+function translateMuscleGroup(raw, locale) {
+  const L = normalizeLocale(locale);
+  const key = `muscleGroups.${muscleGroupKey(raw)}`;
+  const translated = tFor(L, key);
+  if (translated && translated !== key) return translated;
+  return raw;
+}
+
 export default function Workout() {
   const { data: profile } = useProfile();
   const { t, locale } = useI18n();
@@ -91,7 +104,9 @@ export default function Workout() {
               key={i}
               type="button"
               aria-pressed={selectedDay === i}
-              aria-label={`${t('workout.day')} ${d.day}${d.muscles?.length ? ': ' + d.muscles.join(', ') : ''}`}
+              aria-label={`${t('workout.day')} ${d.day}${
+                d.muscles?.length ? ': ' + d.muscles.map((m) => translateMuscleGroup(m, locale)).join(', ') : ''
+              }`}
               onClick={() => {
                 setSelectedDay(i);
                 setCompleted({});
@@ -109,7 +124,7 @@ export default function Workout() {
         <div className="flex flex-wrap gap-2">
           {dayData?.muscles?.map((m) => (
             <span key={m} className="px-3 py-1 bg-muted rounded-lg text-xs text-foreground">
-              {m}
+              {translateMuscleGroup(m, locale)}
             </span>
           ))}
         </div>
@@ -194,7 +209,7 @@ export default function Workout() {
                         <Zap className="w-3 h-3" />
                         {ex.sets}
                       </span>
-                      <span>{ex.muscle}</span>
+                      <span>{translateMuscleGroup(ex.muscle, locale)}</span>
                     </div>
                   </div>
                   {expandedEx === i ? (

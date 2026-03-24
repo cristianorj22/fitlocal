@@ -10,6 +10,7 @@ import { AppInput } from '../components/AppInput';
 import { clearAppData } from '../lib/storage';
 import HealthDisclaimer from '../components/HealthDisclaimer';
 import { useI18n } from '../contexts/LocaleContext.jsx';
+import { normalizeLocale } from '../lib/i18n-utils.js';
 import { toast } from '@/components/ui/use-toast';
 
 const GOAL_EMOJI = { fat_loss: '🔥', hypertrophy: '💪', endurance: '🏃', maintenance: '⚖️' };
@@ -132,7 +133,7 @@ export default function Profile() {
                 onClick={() => applyLocale(value)}
                 disabled={saveProfile.isPending}
                 className={`py-3 rounded-xl text-sm font-medium transition-all ${
-                  (profile.locale || 'en') === value
+                  normalizeLocale(profile.locale) === value
                     ? 'bg-emerald-500 text-white'
                     : 'bg-muted text-muted-foreground border border-transparent'
                 }`}

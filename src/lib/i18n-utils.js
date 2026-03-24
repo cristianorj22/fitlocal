@@ -6,13 +6,20 @@ export function getByPath(obj, path) {
 
 export const SUPPORTED_LOCALES = /** @type {const} */ (['en', 'pt-BR']);
 
-/** @param {string | undefined} raw */
-export function normalizeLocale(raw) {
-  if (raw === 'pt-BR') return 'pt-BR';
-  return 'en';
-}
-
 /** Default for legacy profiles (plan: English until user chooses). */
 export function defaultStoredLocale() {
   return 'en';
+}
+
+/**
+ * Canonical locale for i18n (en | pt-BR).
+ * Accepts common variants (pt_br, pt-br, ptBR) so UI stays in sync after saves.
+ * @param {string | undefined | null} raw
+ */
+export function normalizeLocale(raw) {
+  if (raw == null || raw === '') return defaultStoredLocale();
+  const s = String(raw).trim().toLowerCase().replace(/_/g, '-');
+  if (s === 'pt-br' || s === 'ptbr') return 'pt-BR';
+  if (s === 'en' || s.startsWith('en-')) return 'en';
+  return defaultStoredLocale();
 }

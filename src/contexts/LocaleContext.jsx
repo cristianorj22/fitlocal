@@ -28,10 +28,7 @@ export function useI18n() {
 export function LocaleProvider({ children }) {
   const { data: profile } = useProfile();
 
-  const locale = useMemo(() => {
-    if (profile?.locale === 'pt-BR' || profile?.locale === 'en') return profile.locale;
-    return defaultStoredLocale();
-  }, [profile?.locale]);
+  const locale = useMemo(() => normalizeLocale(profile?.locale), [profile?.locale]);
 
   useEffect(() => {
     document.documentElement.lang = locale === 'pt-BR' ? 'pt-BR' : 'en';
