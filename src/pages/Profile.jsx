@@ -3,6 +3,7 @@ import { getProfile, saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros, calcVO2Max, vo2Category } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
+import DeleteAccountDialog from '../components/DeleteAccountDialog';
 import InfoTooltip from '../components/InfoTooltip';
 import GoalEstimate from '../components/GoalEstimate';
 
@@ -18,6 +19,7 @@ export default function Profile() {
   const [vo2Form, setVo2Form] = useState({ timeMin: '', heartRate: '' });
   const [vo2Result, setVo2Result] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!profile) return null;
 
@@ -53,10 +55,8 @@ export default function Profile() {
   };
 
   const resetAll = () => {
-    if (confirm('Reset all data? This cannot be undone.')) {
-      localStorage.clear();
-      navigate('/onboarding');
-    }
+    localStorage.clear();
+    navigate('/onboarding');
   };
 
   return (
@@ -178,10 +178,19 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Reset */}
-      <button onClick={resetAll} className="w-full py-3 rounded-2xl border border-red-900 text-red-500 text-sm">
-        Reset All Data
+      {/* Delete Account */}
+      <button
+        onClick={() => setShowDeleteDialog(true)}
+        className="w-full py-3 rounded-2xl border border-red-900/60 text-red-500 text-sm font-medium hover:bg-red-500/5 transition-colors">
+        Delete All Data
       </button>
+
+      {showDeleteDialog && (
+        <DeleteAccountDialog
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={resetAll}
+        />
+      )}
     </div>
   );
 }
