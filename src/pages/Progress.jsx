@@ -64,8 +64,8 @@ export default function Progress() {
           { label: 'Current', val: `${weightLog[weightLog.length - 1]?.kg || profile.weight} kg` },
           { label: 'Target', val: `${profile.targetWeight || '—'} kg` },
         ].map((s) => (
-          <div key={s.label} className="bg-gray-900 rounded-2xl p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">{s.label}</div>
+          <div key={s.label} className="bg-card border border-border rounded-2xl p-3 text-center">
+            <div className="text-xs text-muted-foreground mb-1">{s.label}</div>
             <div className="font-bold text-sm">{s.val}</div>
           </div>
         ))}
@@ -85,7 +85,7 @@ export default function Progress() {
         </div>
 
         {photos.length === 0 ? (
-          <div className="bg-gray-900 rounded-2xl h-32 flex flex-col items-center justify-center gap-2 text-gray-600">
+          <div className="bg-card border border-border rounded-2xl h-32 flex flex-col items-center justify-center gap-2 text-muted-foreground">
             <Camera className="w-8 h-8" />
             <span className="text-sm">No photos yet</span>
           </div>
@@ -93,7 +93,7 @@ export default function Progress() {
           <div className="grid grid-cols-3 gap-2">
             {photos.map((p, i) => (
               <button key={i} onClick={() => setSelected(i)} className="aspect-square rounded-xl overflow-hidden">
-                <img src={p.dataUrl} alt="" className="w-full h-full object-cover" />
+                <img src={p.dataUrl} alt={`Progress photo ${i + 1}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -105,18 +105,18 @@ export default function Progress() {
         <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-5">
           <div className="w-full max-w-sm">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-sm text-gray-400">{new Date(photos[selected]?.date).toLocaleDateString()}</span>
+              <span className="text-sm text-muted-foreground">{new Date(photos[selected]?.date).toLocaleDateString()}</span>
               <div className="flex gap-3">
                 <button aria-label="Delete photo" onClick={() => handleDelete(selected)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg">
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
-                <button aria-label="Close photo" onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gray-800 rounded-lg">
+                <button aria-label="Close photo" onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-muted rounded-lg">
                   <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <img src={photos[selected]?.dataUrl} alt="" className="w-full rounded-2xl" />
-            {photos[selected]?.note && <p className="text-sm text-gray-400 mt-3">{photos[selected].note}</p>}
+            <img src={photos[selected]?.dataUrl} alt={`Progress photo enlarged ${selected + 1}`} className="w-full rounded-2xl" />
+            {photos[selected]?.note && <p className="text-sm text-muted-foreground mt-3">{photos[selected].note}</p>}
           </div>
         </div>
       )}

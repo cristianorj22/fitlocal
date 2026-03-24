@@ -46,7 +46,10 @@ export const useCheckIn = () => {
 export const useAddWeight = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (kg) => { addWeightEntry(kg); return getWeightLog(); },
+    mutationFn: async (kg) => {
+      await addWeightEntry(kg);
+      return getWeightLog();
+    },
     onMutate: async (kg) => {
       await qc.cancelQueries({ queryKey: KEYS.weightLog });
       const prev = qc.getQueryData(KEYS.weightLog);
@@ -79,7 +82,9 @@ export const useSaveProfile = () => {
 export const useSavePhoto = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ dataUrl, note }) => { savePhoto(dataUrl, note); },
+    mutationFn: async ({ dataUrl, note }) => {
+      await savePhoto(dataUrl, note);
+    },
     onMutate: async ({ dataUrl, note }) => {
       await qc.cancelQueries({ queryKey: KEYS.photos });
       const prev = qc.getQueryData(KEYS.photos);
@@ -97,7 +102,9 @@ export const useSavePhoto = () => {
 export const useDeletePhoto = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (index) => { deletePhoto(index); },
+    mutationFn: async (index) => {
+      await deletePhoto(index);
+    },
     onMutate: async (index) => {
       await qc.cancelQueries({ queryKey: KEYS.photos });
       const prev = qc.getQueryData(KEYS.photos);

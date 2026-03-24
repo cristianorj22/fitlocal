@@ -56,7 +56,7 @@ export default function Dashboard() {
     <div className="max-w-lg mx-auto p-5 space-y-5">
       {/* Header */}
       <div className="pt-4">
-        <p className="text-gray-500 text-sm">{today}</p>
+        <p className="text-muted-foreground text-sm">{today}</p>
         <h1 className="text-2xl font-bold mt-1">Hey, {name} 👋</h1>
       </div>
 
@@ -64,12 +64,12 @@ export default function Dashboard() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl p-5 flex items-center gap-4 ${checkedIn ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-gray-900 border border-gray-800'}`}
+        className={`rounded-2xl p-5 flex items-center gap-4 ${checkedIn ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-card border border-border'}`}
       >
-        <CheckCircle className={`w-8 h-8 flex-shrink-0 ${checkedIn ? 'text-emerald-400' : 'text-gray-700'}`} />
+        <CheckCircle className={`w-8 h-8 flex-shrink-0 ${checkedIn ? 'text-emerald-400' : 'text-muted-foreground'}`} />
         <div className="flex-1">
           <div className="font-semibold">{checkedIn ? "Today's check-in done!" : "Check in for today"}</div>
-          <div className="text-sm text-gray-400">{checkedIn ? 'Keep up the streak 🔥' : 'Log your presence'}</div>
+          <div className="text-sm text-muted-foreground">{checkedIn ? 'Keep up the streak 🔥' : 'Log your presence'}</div>
         </div>
         {!checkedIn && (
           <button
@@ -84,21 +84,21 @@ export default function Dashboard() {
 
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-gray-900 rounded-2xl p-4">
-          <div className="text-xs text-gray-500 mb-1 flex items-center">BMI <InfoTooltip text="Body Mass Index: weight (kg) ÷ height² (m). WHO standard for healthy weight classification." /></div>
+        <div className="bg-card border border-border rounded-2xl p-4">
+          <div className="text-xs text-muted-foreground mb-1 flex items-center">BMI <InfoTooltip text="Body Mass Index: weight (kg) ÷ height² (m). WHO standard for healthy weight classification." /></div>
           <div className="text-2xl font-bold">{bmi.toFixed(1)}</div>
           <div className={`text-xs mt-1 ${bmiInfo.color}`}>{bmiInfo.label}</div>
         </div>
-        <div className="bg-gray-900 rounded-2xl p-4">
-          <div className="text-xs text-gray-500 mb-1 flex items-center">Daily Calories <InfoTooltip text="Your TDEE adjusted for your goal. Calculated via Mifflin-St Jeor BMR formula." /></div>
+        <div className="bg-card border border-border rounded-2xl p-4">
+          <div className="text-xs text-muted-foreground mb-1 flex items-center">Daily Calories <InfoTooltip text="Your TDEE adjusted for your goal. Calculated via Mifflin-St Jeor BMR formula." /></div>
           <div className="text-2xl font-bold">{macros.calories}</div>
-          <div className="text-xs text-gray-500 mt-1">{GOAL_LABELS[goal]}</div>
+          <div className="text-xs text-muted-foreground mt-1">{GOAL_LABELS[goal]}</div>
         </div>
       </div>
 
       {/* Macros */}
-      <div className="bg-gray-900 rounded-2xl p-4">
-        <div className="text-sm font-medium text-gray-400 mb-3 flex items-center">Daily Macros <InfoTooltip text="Protein builds/preserves muscle. Carbs fuel workouts. Fat supports hormones." /></div>
+      <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="text-sm font-medium text-muted-foreground mb-3 flex items-center">Daily Macros <InfoTooltip text="Protein builds/preserves muscle. Carbs fuel workouts. Fat supports hormones." /></div>
         <div className="grid grid-cols-3 gap-3">
           {[
             { icon: Beef, label: 'Protein', val: macros.protein, unit: 'g', color: 'text-red-400' },
@@ -107,8 +107,8 @@ export default function Dashboard() {
           ].map(({ icon: Icon, label, val, unit, color }) => (
             <div key={label} className="text-center">
               <Icon className={`w-5 h-5 mx-auto mb-1 ${color}`} />
-              <div className="text-lg font-bold">{val}<span className="text-xs text-gray-500">{unit}</span></div>
-              <div className="text-xs text-gray-500">{label}</div>
+              <div className="text-lg font-bold">{val}<span className="text-xs text-muted-foreground">{unit}</span></div>
+              <div className="text-xs text-muted-foreground">{label}</div>
             </div>
           ))}
         </div>
@@ -116,12 +116,12 @@ export default function Dashboard() {
 
       {/* Goal progress */}
       {targetWeight && (
-        <div className="bg-gray-900 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-400">Goal Progress</span>
+            <span className="text-muted-foreground">Goal Progress</span>
             <span className="font-semibold">{progressPct}%</span>
           </div>
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPct}%` }}
@@ -129,7 +129,7 @@ export default function Dashboard() {
               className="h-full bg-emerald-500 rounded-full"
             />
           </div>
-          <div className="flex justify-between text-xs text-gray-600 mt-2">
+          <div className="flex justify-between text-xs text-muted-foreground mt-2">
             <span>Current: {weightLog[weightLog.length - 1]?.kg || profile.weight} kg</span>
             <span>Target: {targetWeight} kg</span>
           </div>
@@ -140,13 +140,13 @@ export default function Dashboard() {
       <WeightChart log={weightLog} targetWeight={targetWeight} />
 
       {/* Add weight */}
-      <div className="bg-gray-900 rounded-2xl p-4">
+      <div className="bg-card border border-border rounded-2xl p-4">
         {showAddWeight ? (
           <div className="flex gap-3">
             <input
               inputMode="decimal"
               pattern="[0-9]*"
-              className="flex-1 min-h-[44px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
+              className="flex-1 min-h-[44px] bg-muted border border-border rounded-xl px-4 py-3 text-foreground text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
               placeholder="Weight in kg"
               value={newWeight}
               onChange={(e) => setNewWeight(e.target.value)}
@@ -154,10 +154,10 @@ export default function Dashboard() {
             />
             <button onClick={handleAddWeight} disabled={addWeight.isPending}
               className="px-4 py-3 bg-emerald-500 rounded-xl text-sm font-semibold disabled:opacity-60">Save</button>
-            <button onClick={() => setShowAddWeight(false)} className="px-4 py-3 bg-gray-800 rounded-xl text-sm text-gray-400">Cancel</button>
+            <button onClick={() => setShowAddWeight(false)} className="px-4 py-3 bg-muted rounded-xl text-sm text-muted-foreground">Cancel</button>
           </div>
         ) : (
-          <button aria-label="Log today's weight" onClick={() => setShowAddWeight(true)} className="w-full flex items-center justify-center gap-2 min-h-[44px] text-sm text-gray-400">
+          <button aria-label="Log today's weight" onClick={() => setShowAddWeight(true)} className="w-full flex items-center justify-center gap-2 min-h-[44px] text-sm text-muted-foreground">
             <Plus className="w-5 h-5" /> Log Today's Weight
           </button>
         )}

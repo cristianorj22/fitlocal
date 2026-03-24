@@ -7,6 +7,7 @@ import InfoTooltip from '../components/InfoTooltip';
 import GoalEstimate from '../components/GoalEstimate';
 import { useProfile, useSaveProfile } from '../lib/queries';
 import { AppInput } from '../components/AppInput';
+import { clearAppData } from '../lib/storage';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss 🔥', hypertrophy: 'Hypertrophy 💪', endurance: 'Endurance 🏃', maintenance: 'Maintenance ⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -14,6 +15,8 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function Profile() {
   const navigate = useNavigate();
+  const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL || 'support@fitlocal.app';
+  const privacyPolicyUrl = import.meta.env.VITE_PRIVACY_POLICY_URL || '/privacy';
   const { data: savedProfile } = useProfile();
   const saveProfile = useSaveProfile();
   const [profile, setProfile] = useState(savedProfile);
@@ -59,8 +62,8 @@ export default function Profile() {
     setVo2Result({ vo2: vo2.toFixed(1), category: cat });
   };
 
-  const resetAll = () => {
-    localStorage.clear();
+  const resetAll = async () => {
+    await clearAppData();
     navigate('/onboarding');
   };
 
@@ -69,7 +72,7 @@ export default function Profile() {
       <div className="pt-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{profile.name}</h1>
-          <p className="text-sm text-gray-500">Your fitness profile</p>
+          <p className="text-sm text-muted-foreground">Your fitness profile</p>
         </div>
         <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-xl">
           {profile.name?.[0]?.toUpperCase() || '?'}
@@ -77,8 +80,8 @@ export default function Profile() {
       </div>
 
       {/* Body metrics */}
-      <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
-        <h2 className="text-sm font-medium text-gray-400">Body Metrics</h2>
+      <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+        <h2 className="text-sm font-medium text-muted-foreground">Body Metrics</h2>
         <div className="grid grid-cols-2 gap-3">
           {[
             { label: 'Weight (kg)', key: 'weight', inputMode: 'decimal' },
@@ -87,7 +90,7 @@ export default function Profile() {
             { label: 'Target (kg)', key: 'targetWeight', inputMode: 'decimal' },
           ].map(({ label, key, inputMode }) => (
             <div key={key}>
-              <label className="text-xs text-gray-500 mb-1 block">{label}</label>
+              <label className="text-xs text-muted-foreground mb-1 block">{label}</label>
               <AppInput
                 inputMode={inputMode}
                 pattern="[0-9]*"
@@ -97,25 +100,25 @@ export default function Profile() {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800">
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
           <div className="text-center">
-            <div className="text-xs text-gray-500 flex items-center justify-center">BMI <InfoTooltip text="Body Mass Index. Healthy range: 18.5–24.9 (WHO)." /></div>
+            <div className="text-xs text-muted-foreground flex items-center justify-center">BMI <InfoTooltip text="Body Mass Index. Healthy range: 18.5–24.9 (WHO)." /></div>
             <div className="text-lg font-bold">{profile.bmi?.toFixed(1)}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500 flex items-center justify-center">TDEE <InfoTooltip text="Total Daily Energy Expenditure — calories you burn per day including activity." /></div>
+            <div className="text-xs text-muted-foreground flex items-center justify-center">TDEE <InfoTooltip text="Total Daily Energy Expenditure — calories you burn per day including activity." /></div>
             <div className="text-lg font-bold">{Math.round(profile.tdee || 0)} kcal</div>
           </div>
         </div>
       </div>
 
       {/* Goal */}
-      <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
-        <h2 className="text-sm font-medium text-gray-400">Change Focus</h2>
+      <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+        <h2 className="text-sm font-medium text-muted-foreground">Change Focus</h2>
         <div className="grid grid-cols-2 gap-2">
           {GOALS.map((g) => (
             <button key={g} onClick={() => set('goal', g)}
-              className={`py-3 px-3 rounded-xl text-sm font-medium transition-all text-left ${profile.goal === g ? 'bg-emerald-500/20 border border-emerald-500 text-emerald-300' : 'bg-gray-800 text-gray-400 border border-transparent'}`}>
+              className={`py-3 px-3 rounded-xl text-sm font-medium transition-all text-left ${profile.goal === g ? 'bg-emerald-500/20 border border-emerald-500 text-emerald-700 dark:text-emerald-300' : 'bg-muted text-muted-foreground border border-transparent'}`}>
               {GOAL_LABELS[g]}
             </button>
           ))}
@@ -123,12 +126,12 @@ export default function Profile() {
       </div>
 
       {/* Schedule */}
-      <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
-        <h2 className="text-sm font-medium text-gray-400">Training Days</h2>
+      <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+        <h2 className="text-sm font-medium text-muted-foreground">Training Days</h2>
         <div className="flex gap-2 flex-wrap">
           {DAYS.map((d) => (
             <button key={d} onClick={() => toggleDay(d)}
-              className={`w-11 h-11 rounded-xl text-sm font-medium transition-all ${(profile.days || []).includes(d) ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'}`}>
+              className={`w-11 h-11 rounded-xl text-sm font-medium transition-all ${(profile.days || []).includes(d) ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground'}`}>
               {d}
             </button>
           ))}
@@ -149,32 +152,32 @@ export default function Profile() {
       </button>
 
       {/* VO2 Max */}
-      <div className="bg-gray-900 rounded-2xl overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden">
         <button
         aria-label={showVO2 ? 'Collapse VO2 max calculator' : 'Expand VO2 max calculator'}
         aria-expanded={showVO2}
         className="w-full flex items-center justify-between p-4"
         onClick={() => setShowVO2(!showVO2)}>
           <span className="font-semibold">VO₂ Max — Rockport Test</span>
-          {showVO2 ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+          {showVO2 ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
         </button>
 
         {showVO2 && (
-          <div className="px-4 pb-5 space-y-4 border-t border-gray-800 pt-4">
-            <div className="text-sm text-gray-400 space-y-1">
-              <p className="font-medium text-white">Test Protocol:</p>
+          <div className="px-4 pb-5 space-y-4 border-t border-border pt-4">
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p className="font-medium text-foreground">Test Protocol:</p>
               <p>1. Walk 1 mile (1.6 km) as fast as you can</p>
               <p>2. Record your finish time (in minutes, e.g. 15.5)</p>
               <p>3. Measure heart rate immediately after</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Time (minutes)</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Time (minutes)</label>
                 <AppInput inputMode="decimal" pattern="[0-9]*"
                   placeholder="e.g. 15.5" value={vo2Form.timeMin} onChange={(e) => setVo2Form((f) => ({ ...f, timeMin: e.target.value }))} />
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Heart Rate (bpm)</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Heart Rate (bpm)</label>
                 <AppInput inputMode="numeric" pattern="[0-9]*"
                   placeholder="e.g. 155" value={vo2Form.heartRate} onChange={(e) => setVo2Form((f) => ({ ...f, heartRate: e.target.value }))} />
               </div>
@@ -183,7 +186,7 @@ export default function Profile() {
             {vo2Result && (
               <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center">
                 <div className="text-3xl font-bold text-emerald-400">{vo2Result.vo2}</div>
-                <div className="text-sm text-gray-400">ml/kg/min — <span className="text-white font-medium">{vo2Result.category}</span></div>
+                <div className="text-sm text-muted-foreground">ml/kg/min — <span className="text-foreground font-medium">{vo2Result.category}</span></div>
               </div>
             )}
           </div>
@@ -204,6 +207,37 @@ export default function Profile() {
           onConfirm={resetAll}
         />
       )}
+
+      {/* Privacy & Support */}
+      <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+        <h2 className="text-sm font-medium text-muted-foreground">Privacy & Support</h2>
+        <details className="group">
+          <summary className="cursor-pointer text-sm font-medium text-foreground list-none flex items-center justify-between">
+            Privacy Policy
+            <span className="text-muted-foreground group-open:rotate-180 transition-transform">⌄</span>
+          </summary>
+          <div className="mt-3 text-sm text-muted-foreground space-y-2">
+            <p>Your data is stored locally on your device for core app functionality.</p>
+            <p>Stored entities include profile, check-ins, weight history, and progress photos.</p>
+            <p>You can remove all app data anytime using the “Delete All Data” action above.</p>
+            <p>For App Store submission, this text should match your public Privacy Policy URL in App Store Connect metadata.</p>
+          </div>
+        </details>
+        <div className="text-sm text-muted-foreground">
+          Support: <a className="text-emerald-500 hover:underline" href={`mailto:${supportEmail}`}>{supportEmail}</a>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Public policy URL:{' '}
+          <a
+            className="text-emerald-500 hover:underline"
+            href={privacyPolicyUrl}
+            target={privacyPolicyUrl.startsWith('http') ? '_blank' : undefined}
+            rel={privacyPolicyUrl.startsWith('http') ? 'noreferrer' : undefined}
+          >
+            {privacyPolicyUrl}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
