@@ -32,7 +32,14 @@ export const useCheckIn = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async () => { addCheckIn(); return true; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.checkedIn }),
+    onMutate: async () => {
+      await qc.cancelQueries({ queryKey: KEYS.checkedIn });
+      const prev = qc.getQueryData(KEYS.checkedIn);
+      qc.setQueryData(KEYS.checkedIn, true);
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(KEYS.checkedIn, ctx.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.checkedIn }),
   });
 };
 
@@ -40,7 +47,17 @@ export const useAddWeight = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (kg) => { addWeightEntry(kg); return getWeightLog(); },
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
+    onMutate: async (kg) => {
+      await qc.cancelQueries({ queryKey: KEYS.weightLog });
+      const prev = qc.getQueryData(KEYS.weightLog);
+      qc.setQueryData(KEYS.weightLog, (old = []) => [
+        ...old,
+        { kg, date: new Date().toISOString() },
+      ]);
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(KEYS.weightLog, ctx.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
   });
 };
 
@@ -48,7 +65,14 @@ export const useSaveProfile = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data) => { saveProfile(data); return data; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.profile }),
+    onMutate: async (data) => {
+      await qc.cancelQueries({ queryKey: KEYS.profile });
+      const prev = qc.getQueryData(KEYS.profile);
+      qc.setQueryData(KEYS.profile, data);
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(KEYS.profile, ctx.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.profile }),
   });
 };
 
@@ -56,7 +80,17 @@ export const useSavePhoto = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ dataUrl, note }) => { savePhoto(dataUrl, note); },
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
+    onMutate: async ({ dataUrl, note }) => {
+      await qc.cancelQueries({ queryKey: KEYS.photos });
+      const prev = qc.getQueryData(KEYS.photos);
+      qc.setQueryData(KEYS.photos, (old = []) => [
+        ...old,
+        { dataUrl, note, date: new Date().toISOString() },
+      ]);
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(KEYS.photos, ctx.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
   });
 };
 
@@ -64,6 +98,13 @@ export const useDeletePhoto = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (index) => { deletePhoto(index); },
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
+    onMutate: async (index) => {
+      await qc.cancelQueries({ queryKey: KEYS.photos });
+      const prev = qc.getQueryData(KEYS.photos);
+      qc.setQueryData(KEYS.photos, (old = []) => old.filter((_, i) => i !== index));
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => qc.setQueryData(KEYS.photos, ctx.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
   });
 };

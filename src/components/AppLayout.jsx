@@ -22,54 +22,28 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Per-tab isolated history stacks: { '/': ['/'], '/workout': ['/workout'], ... }
-  const tabStacks = useRef(
-    Object.fromEntries(ROOT_TABS.map((t) => [t, [t]]))
+  // Track only the last visited sub-path per tab (not a full stack).
+  // We let the browser's native history API own the actual history — this
+  // ref only remembers "where the user was" so switching tabs restores position.
+  const lastTabPath = useRef(
+    Object.fromEntries(ROOT_TABS.map((t) => [t, t]))
   );
 
   const currentTab = getOwnerTab(location.pathname);
   const isRootTab = ROOT_TABS.includes(location.pathname);
 
-  // Keep tab stacks updated as location changes
+  // Keep last-path record in sync on every navigation
   useEffect(() => {
-    const stack = tabStacks.current[currentTab];
-    const last = stack[stack.length - 1];
-    if (last !== location.pathname) {
-      tabStacks.current[currentTab] = [...stack, location.pathname];
-    }
+    lastTabPath.current[currentTab] = location.pathname;
   }, [location.pathname, currentTab]);
 
-  // Navigate to last position within a tab when switching tabs
+  // Switch to a tab, resuming at last known sub-path
   const handleTabPress = (tabPath) => {
-    const stack = tabStacks.current[tabPath];
-    const destination = stack[stack.length - 1] ?? tabPath;
-    navigate(destination);
+    navigate(lastTabPath.current[tabPath] ?? tabPath);
   };
 
-  const handleBack = () => {
-    const stack = tabStacks.current[currentTab];
-    if (stack.length > 1) {
-      tabStacks.current[currentTab] = stack.slice(0, -1);
-      navigate(stack[stack.length - 2]);
-    } else {
-      navigate(-1);
-    }
-  };
-
-  // Android hardware back — reference tabStacks ref directly to avoid stale closure
-  useEffect(() => {
-    const onPopState = () => {
-      const tab = getOwnerTab(window.location.pathname);
-      const stack = tabStacks.current[tab];
-      if (stack && stack.length > 1) {
-        tabStacks.current[tab] = stack.slice(0, -1);
-        navigate(stack[stack.length - 2]);
-      }
-    };
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Delegate back navigation entirely to the browser — no custom stack needed
+  const handleBack = () => navigate(-1);
 
   return (
     <div
