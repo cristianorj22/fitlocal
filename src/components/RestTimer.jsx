@@ -50,9 +50,9 @@ export default function RestTimer({ defaultSeconds = 90 }) {
   return (
     <div className="bg-gray-900 rounded-2xl p-5 flex items-center gap-4">
       <div className="relative w-16 h-16 flex-shrink-0">
-        <svg className="w-16 h-16 -rotate-90" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="28" fill="none" stroke="rgb(31 41 55)" strokeWidth="5" />
-          <circle cx="32" cy="32" r="28" fill="none" stroke="rgb(52 211 153)" strokeWidth="5"
+        <svg className="w-16 h-16 -rotate-90" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="28" fill="none" stroke="#1f2937" strokeWidth="5" />
+          <circle cx="32" cy="32" r="28" fill="none" stroke="#34d399" strokeWidth="5"
             strokeDasharray={`${2 * Math.PI * 28}`}
             strokeDashoffset={`${2 * Math.PI * 28 * (1 - pct / 100)}`}
             strokeLinecap="round" className="transition-all duration-1000" />

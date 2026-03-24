@@ -28,8 +28,20 @@ export default function Progress() {
         canvas.width = Math.round(img.width * scale);
         canvas.height = Math.round(img.height * scale);
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        URL.revokeObjectURL(objectUrl); // immediately release the blob URL
-        resolve(canvas.toDataURL('image/jpeg', 0.75));
+
+        // Capture output before releasing resources
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+
+        // Release blob URL immediately to free native memory
+        URL.revokeObjectURL(objectUrl);
+        // Explicitly zero canvas dimensions — frees the backing pixel buffer
+        // in WebKit/Blink without waiting for GC, critical on low-end WebViews
+        canvas.width = 0;
+        canvas.height = 0;
+        // Drop img src so the decoded bitmap is released from memory
+        img.src = '';
+
+        resolve(dataUrl);
       };
       img.src = objectUrl;
     });

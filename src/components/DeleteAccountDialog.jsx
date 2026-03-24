@@ -10,8 +10,15 @@ export default function DeleteAccountDialog({ onClose, onConfirm }) {
   const REQUIRED = 'DELETE';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+      style={{
+        paddingTop:    'max(1rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+        paddingLeft:   'max(1rem, env(safe-area-inset-left))',
+        paddingRight:  'max(1rem, env(safe-area-inset-right))',
+      }}
+    >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
