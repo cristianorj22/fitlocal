@@ -75,16 +75,17 @@ export default function Workout() {
         {dayData?.exercises?.map((ex, i) => (
           <div key={i} className={`bg-gray-900 rounded-2xl overflow-hidden border transition-all ${completed[ex.name] ? 'border-emerald-500/30 opacity-60' : 'border-gray-800'}`}>
             <button
-              className="w-full flex items-center gap-4 p-4 text-left"
+              className="w-full flex items-center gap-2 p-4 text-left"
               onClick={() => setExpandedEx(expandedEx === i ? null : i)}
             >
               <span
+                role="checkbox"
+                aria-checked={!!completed[ex.name]}
                 onClick={(e) => { e.stopPropagation(); toggleComplete(ex.name); }}
-                role="checkbox" aria-checked={!!completed[ex.name]}
                 className="flex-shrink-0 flex items-center justify-center w-11 h-11 -ml-2 cursor-pointer"
               >
-                <span className={`w-6 h-6 rounded-full border-2 flex-shrink-0 transition-all ${completed[ex.name] ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600'}`}
-              /></span></span>
+                <span className={`w-6 h-6 rounded-full border-2 block transition-all ${completed[ex.name] ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600'}`} />
+              </span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">{ex.name}</span>
