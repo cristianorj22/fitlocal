@@ -1,18 +1,23 @@
 import { useState } from 'react';
-import { getProfile, getWeightLog, addWeightEntry, getTodayCheckedIn, addCheckIn } from '../lib/storage';
 import { bmiCategory } from '../lib/fitness';
 import WeightChart from '../components/WeightChart';
 import { CheckCircle, Plus, Beef, Wheat, Droplets } from 'lucide-react';
 import InfoTooltip from '../components/InfoTooltip';
 import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
+import { useProfile, useWeightLog, useCheckedIn, useCheckIn, useAddWeight } from '../lib/queries';
+import { useQueryClient } from '@tanstack/react-query';
+import { KEYS } from '../lib/queries';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss', hypertrophy: 'Hypertrophy', endurance: 'Endurance', maintenance: 'Maintenance' };
 
 export default function Dashboard() {
-  const profile = getProfile();
-  const [weightLog, setWeightLog] = useState(getWeightLog());
-  const [checkedIn, setCheckedIn] = useState(getTodayCheckedIn());
+  const qc = useQueryClient();
+  const { data: profile } = useProfile();
+  const { data: weightLog = [] } = useWeightLog();
+  const { data: checkedIn = false } = useCheckedIn();
+  const checkIn = useCheckIn();
+  const addWeight = useAddWeight();
   const [newWeight, setNewWeight] = useState('');
   const [showAddWeight, setShowAddWeight] = useState(false);
 
@@ -21,15 +26,9 @@ export default function Dashboard() {
   const { bmi, macros, name, targetWeight, goal } = profile;
   const bmiInfo = bmiCategory(bmi);
 
-  const handleCheckIn = () => {
-    addCheckIn();
-    setCheckedIn(true);
-  };
-
   const handleAddWeight = () => {
     if (!newWeight) return;
-    addWeightEntry(parseFloat(newWeight));
-    setWeightLog(getWeightLog());
+    addWeight.mutate(parseFloat(newWeight));
     setNewWeight('');
     setShowAddWeight(false);
   };
@@ -46,7 +45,11 @@ export default function Dashboard() {
     return Math.min(100, Math.round((done / total) * 100));
   })();
 
-  const handleRefresh = () => new Promise((res) => setTimeout(res, 800));
+  const handleRefresh = async () => {
+    await qc.invalidateQueries({ queryKey: KEYS.profile });
+    await qc.invalidateQueries({ queryKey: KEYS.weightLog });
+    await qc.invalidateQueries({ queryKey: KEYS.checkedIn });
+  };
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
@@ -69,8 +72,9 @@ export default function Dashboard() {
           <div className="text-sm text-gray-400">{checkedIn ? 'Keep up the streak 🔥' : 'Log your presence'}</div>
         </div>
         {!checkedIn && (
-          <button onClick={handleCheckIn} className="px-4 py-2 bg-emerald-500 rounded-xl text-sm font-semibold">
-            Check In
+          <button onClick={() => checkIn.mutate()} disabled={checkIn.isPending}
+            className="px-4 py-2 bg-emerald-500 rounded-xl text-sm font-semibold disabled:opacity-60">
+            {checkIn.isPending ? '...' : 'Check In'}
           </button>
         )}
       </motion.div>
@@ -83,7 +87,7 @@ export default function Dashboard() {
           <div className={`text-xs mt-1 ${bmiInfo.color}`}>{bmiInfo.label}</div>
         </div>
         <div className="bg-gray-900 rounded-2xl p-4">
-          <div className="text-xs text-gray-500 mb-1 flex items-center">Daily Calories <InfoTooltip text="Your TDEE (Total Daily Energy Expenditure) adjusted for your goal. Calculated via Mifflin-St Jeor BMR formula." /></div>
+          <div className="text-xs text-gray-500 mb-1 flex items-center">Daily Calories <InfoTooltip text="Your TDEE adjusted for your goal. Calculated via Mifflin-St Jeor BMR formula." /></div>
           <div className="text-2xl font-bold">{macros.calories}</div>
           <div className="text-xs text-gray-500 mt-1">{GOAL_LABELS[goal]}</div>
         </div>
@@ -91,7 +95,7 @@ export default function Dashboard() {
 
       {/* Macros */}
       <div className="bg-gray-900 rounded-2xl p-4">
-        <div className="text-sm font-medium text-gray-400 mb-3 flex items-center">Daily Macros <InfoTooltip text="Protein builds/preserves muscle. Carbs fuel workouts. Fat supports hormones. Values are calibrated to your goal per ACSM guidelines." /></div>
+        <div className="text-sm font-medium text-gray-400 mb-3 flex items-center">Daily Macros <InfoTooltip text="Protein builds/preserves muscle. Carbs fuel workouts. Fat supports hormones." /></div>
         <div className="grid grid-cols-3 gap-3">
           {[
             { icon: Beef, label: 'Protein', val: macros.protein, unit: 'g', color: 'text-red-400' },
@@ -144,7 +148,8 @@ export default function Dashboard() {
               onChange={(e) => setNewWeight(e.target.value)}
               autoFocus
             />
-            <button onClick={handleAddWeight} className="px-4 py-3 bg-emerald-500 rounded-xl text-sm font-semibold">Save</button>
+            <button onClick={handleAddWeight} disabled={addWeight.isPending}
+              className="px-4 py-3 bg-emerald-500 rounded-xl text-sm font-semibold disabled:opacity-60">Save</button>
             <button onClick={() => setShowAddWeight(false)} className="px-4 py-3 bg-gray-800 rounded-xl text-sm text-gray-400">Cancel</button>
           </div>
         ) : (

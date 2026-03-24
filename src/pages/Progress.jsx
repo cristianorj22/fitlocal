@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
-import { getProfile, getWeightLog, getPhotos, savePhoto, deletePhoto } from '../lib/storage';
 import WeightChart from '../components/WeightChart';
 import { Camera, Trash2, X } from 'lucide-react';
+import { useProfile, useWeightLog, usePhotos, useSavePhoto, useDeletePhoto } from '../lib/queries';
 
 export default function Progress() {
-  const profile = getProfile();
-  const weightLog = getWeightLog();
-  const [photos, setPhotos] = useState(getPhotos());
+  const { data: profile } = useProfile();
+  const { data: weightLog = [] } = useWeightLog();
+  const { data: photos = [] } = usePhotos();
+  const savePhoto = useSavePhoto();
+  const deletePhoto = useDeletePhoto();
   const [selected, setSelected] = useState(null);
   const [note, setNote] = useState('');
   const fileRef = useRef();
@@ -18,16 +20,14 @@ export default function Progress() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      savePhoto(ev.target.result, note);
-      setPhotos(getPhotos());
+      savePhoto.mutate({ dataUrl: ev.target.result, note });
       setNote('');
     };
     reader.readAsDataURL(file);
   };
 
   const handleDelete = (i) => {
-    deletePhoto(i);
-    setPhotos(getPhotos());
+    deletePhoto.mutate(i);
     setSelected(null);
   };
 
@@ -57,7 +57,8 @@ export default function Progress() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold">Progress Photos</h2>
-          <button onClick={() => fileRef.current?.click()} className="flex items-center gap-2 px-3 py-2 bg-emerald-500 rounded-xl text-sm font-medium">
+          <button onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-2 px-3 py-2 bg-emerald-500 rounded-xl text-sm font-medium">
             <Camera className="w-4 h-4" /> Add Photo
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />

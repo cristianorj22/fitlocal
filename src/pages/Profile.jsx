@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { getProfile, saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros, calcVO2Max, vo2Category } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import DeleteAccountDialog from '../components/DeleteAccountDialog';
 import InfoTooltip from '../components/InfoTooltip';
 import GoalEstimate from '../components/GoalEstimate';
+import { useProfile, useSaveProfile } from '../lib/queries';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss 🔥', hypertrophy: 'Hypertrophy 💪', endurance: 'Endurance 🏃', maintenance: 'Maintenance ⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -13,8 +13,9 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function Profile() {
   const navigate = useNavigate();
-  const raw = getProfile();
-  const [profile, setProfile] = useState(raw);
+  const { data: savedProfile } = useProfile();
+  const saveProfile = useSaveProfile();
+  const [profile, setProfile] = useState(savedProfile);
   const [showVO2, setShowVO2] = useState(false);
   const [vo2Form, setVo2Form] = useState({ timeMin: '', heartRate: '' });
   const [vo2Result, setVo2Result] = useState(null);
@@ -39,10 +40,13 @@ export default function Profile() {
     const tdee = calcTDEE(bmr, profile.activityLevel || 'moderate');
     const macros = calcMacros(tdee, profile.goal, w);
     const updated = { ...profile, bmi, bmr, tdee, macros };
-    saveProfile(updated);
-    setProfile(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    saveProfile.mutate(updated, {
+      onSuccess: () => {
+        setProfile(updated);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      },
+    });
   };
 
   const calcVo2 = () => {
@@ -98,7 +102,7 @@ export default function Profile() {
             <div className="text-lg font-bold">{profile.bmi?.toFixed(1)}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500 flex items-center justify-center">TDEE <InfoTooltip text="Total Daily Energy Expenditure — calories you burn per day including activity. Used to set your calorie target." /></div>
+            <div className="text-xs text-gray-500 flex items-center justify-center">TDEE <InfoTooltip text="Total Daily Energy Expenditure — calories you burn per day including activity." /></div>
             <div className="text-lg font-bold">{Math.round(profile.tdee || 0)} kcal</div>
           </div>
         </div>
@@ -134,9 +138,9 @@ export default function Profile() {
       {profile.goal && <GoalEstimate goal={profile.goal} />}
 
       {/* Save */}
-      <button onClick={recalcAndSave}
-        className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-emerald-600' : 'bg-emerald-500'}`}>
-        <RefreshCw className="w-5 h-5" />
+      <button onClick={recalcAndSave} disabled={saveProfile.isPending}
+        className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-emerald-600' : 'bg-emerald-500'} disabled:opacity-60`}>
+        <RefreshCw className={`w-5 h-5 ${saveProfile.isPending ? 'animate-spin' : ''}`} />
         {saved ? 'Recalculated & Saved!' : 'Recalculate & Save'}
       </button>
 
