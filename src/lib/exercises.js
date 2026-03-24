@@ -1,96 +1,80 @@
-// Exercise database
-const COMPOUND = [
-  { name: 'Back Squat', muscle: 'Legs', type: 'compound', sets: '4x6', desc: 'Barbell on traps, squat to parallel' },
-  { name: 'Bench Press', muscle: 'Chest', type: 'compound', sets: '4x6', desc: 'Flat bench, bar to chest' },
-  { name: 'Deadlift', muscle: 'Back', type: 'compound', sets: '3x5', desc: 'Hip hinge, neutral spine' },
-  { name: 'Overhead Press', muscle: 'Shoulders', type: 'compound', sets: '3x8', desc: 'Press bar overhead, lock out' },
-  { name: 'Barbell Row', muscle: 'Back', type: 'compound', sets: '4x8', desc: 'Hinge forward, row to lower chest' },
-  { name: 'Romanian Deadlift', muscle: 'Hamstrings', type: 'compound', sets: '3x10', desc: 'Hip hinge with slight knee bend' },
-  { name: 'Pull-Up', muscle: 'Back', type: 'compound', sets: '3x8', desc: 'Full ROM, chest to bar' },
-  { name: 'Dips', muscle: 'Chest/Triceps', type: 'compound', sets: '3x10', desc: 'Lean forward for chest focus' },
+// Normalized exercise database
+export const EXERCISE_DB = [
+  // Beginners / Stay Active / Seniors
+  { id: 1, name: 'Chair Squat', category: 'Legs', focus: 'Compound', goals: ['Stay Active', 'Endurance'], ageRange: ['60+'], level: 'Beginner', duration: 'Short', sets: '3', reps: '10-15', rest: 90, instructions: 'Sit down and stand up from a stable chair, focusing on control and balance. Keep your knees aligned.' },
+  { id: 2, name: 'Wall Push-up', category: 'Chest', focus: 'Compound', goals: ['Stay Active', 'Endurance'], ageRange: ['60+', '18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '10-15', rest: 60, instructions: 'Place your hands on the wall at shoulder height. Lower your body in a straight line and push back up.' },
+  { id: 3, name: 'Glute Bridge', category: 'Legs/Core', focus: 'Compound', goals: ['Stay Active', 'Endurance', 'Hypertrophy'], ageRange: ['18-60', '60+'], level: 'Beginner', duration: 'Short', sets: '3', reps: '12-15', rest: 60, instructions: 'Lying on your back, lift your hips until your thighs and torso are aligned. Contract your glutes.' },
+  { id: 4, name: 'Resistance Band Row', category: 'Back', focus: 'Compound', goals: ['Stay Active', 'Endurance'], ageRange: ['60+', '18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '12-15', rest: 60, instructions: 'Sit with your legs straight, band attached to your feet. Pull the band towards your abdomen.' },
+  // Hypertrophy / Strength
+  { id: 5, name: 'Barbell Squat', category: 'Legs', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '4', reps: '8-12', rest: 90, instructions: 'Barbell on trapezius muscles. Squat keeping your back straight and knees out until thighs are parallel.' },
+  { id: 6, name: 'Barbell Bench Press', category: 'Chest', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '4', reps: '8-12', rest: 90, instructions: 'Lying on the bench, hold the bar at shoulder width. Lower it to your chest and push.' },
+  { id: 7, name: 'Romanian Deadlift', category: 'Legs/Back', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Advanced', duration: 'Medium', sets: '3', reps: '10-12', rest: 90, instructions: 'Legs almost straight. Lower the bar close to the thigh, pushing the hip back until you feel the stretch.' },
+  { id: 8, name: 'Barbell Row', category: 'Back', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '4', reps: '10-12', rest: 90, instructions: 'Lean your torso forward ~45°. Pull the bar towards your navel, contracting your back.' },
+  { id: 9, name: 'Dumbbell Overhead Press', category: 'Shoulders', focus: 'Compound', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '4', reps: '10-12', rest: 90, instructions: 'Press dumbbells overhead from shoulder height. Lock out at the top, control on the way down.' },
+  { id: 10, name: 'Deadlift', category: 'Back', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '3', reps: '5', rest: 120, instructions: 'Hip hinge, neutral spine. Drive through the floor and lock hips at the top.' },
+  { id: 11, name: 'Pull-Up', category: 'Back', focus: 'Compound', goals: ['Hypertrophy', 'Endurance'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '3', reps: '8', rest: 90, instructions: 'Full ROM, chest to bar. Engage lats from the bottom.' },
+  { id: 12, name: 'Dips', category: 'Chest/Triceps', focus: 'Compound', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '3', reps: '10', rest: 90, instructions: 'Lean forward for chest focus. Full depth, control the descent.' },
+  // Isolation
+  { id: 13, name: 'Cable Fly', category: 'Chest', focus: 'Isolation', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Medium', sets: '3', reps: '12', rest: 60, instructions: 'Wide arc, squeeze at centre of movement.' },
+  { id: 14, name: 'Lateral Raise', category: 'Shoulders', focus: 'Isolation', goals: ['Hypertrophy', 'Maintenance'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '4', reps: '15', rest: 60, instructions: 'Slight forward lean, lead with elbow. Control the eccentric.' },
+  { id: 15, name: 'Barbell Curl', category: 'Biceps', focus: 'Isolation', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '12', rest: 60, instructions: 'Strict form, no swing. Full range of motion.' },
+  { id: 16, name: 'Tricep Pushdown', category: 'Triceps', focus: 'Isolation', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '15', rest: 60, instructions: 'Lock out at bottom, control on the way up.' },
+  { id: 17, name: 'Leg Curl', category: 'Hamstrings', focus: 'Isolation', goals: ['Hypertrophy'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '12', rest: 60, instructions: 'Slow eccentric, full stretch at bottom.' },
+  { id: 18, name: 'Calf Raise', category: 'Calves', focus: 'Isolation', goals: ['Hypertrophy', 'Endurance', 'Maintenance'], ageRange: ['18-60', '60+'], level: 'Beginner', duration: 'Short', sets: '4', reps: '15', rest: 45, instructions: 'Full ROM, pause and stretch at the bottom.' },
+  // Cardio
+  { id: 19, name: 'Steady-State Run', category: 'Cardio', focus: 'Cardio', goals: ['Endurance', 'fat_loss'], ageRange: ['18-60'], level: 'Beginner', duration: 'Medium', sets: '1', reps: '20-30 min', rest: 0, instructions: '65-75% max HR. Maintain a conversational pace.' },
+  { id: 20, name: 'HIIT Sprints', category: 'Cardio', focus: 'Cardio', goals: ['fat_loss', 'Endurance'], ageRange: ['18-60'], level: 'Intermediate', duration: 'Short', sets: '8', reps: '30s on / 60s off', rest: 60, instructions: 'Max effort sprints. 30s all-out, 60s active recovery.' },
+  { id: 21, name: 'Jump Rope', category: 'Cardio', focus: 'Cardio', goals: ['fat_loss', 'Endurance'], ageRange: ['18-60'], level: 'Beginner', duration: 'Short', sets: '3', reps: '5 min', rest: 60, instructions: 'Maintain a steady rhythm. Great for coordination and warm-up.' },
 ];
 
-const ISOLATION = {
-  Chest: [
-    { name: 'Cable Fly', muscle: 'Chest', type: 'isolation', sets: '3x12', desc: 'Wide arc, squeeze at centre' },
-    { name: 'Incline DB Press', muscle: 'Chest', type: 'isolation', sets: '3x12', desc: '30° incline, full ROM' },
-    { name: 'Pec Deck', muscle: 'Chest', type: 'isolation', sets: '3x15', desc: 'Controlled movement, contract hard' },
-  ],
-  Back: [
-    { name: 'Lat Pulldown', muscle: 'Back', type: 'isolation', sets: '3x12', desc: 'Pull to upper chest' },
-    { name: 'Seated Cable Row', muscle: 'Back', type: 'isolation', sets: '3x12', desc: 'Elbows tight, full stretch' },
-    { name: 'Face Pulls', muscle: 'Rear Delt', type: 'isolation', sets: '3x15', desc: 'Pull to face, external rotate' },
-  ],
-  Legs: [
-    { name: 'Leg Curl', muscle: 'Hamstrings', type: 'isolation', sets: '3x12', desc: 'Slow eccentric' },
-    { name: 'Leg Extension', muscle: 'Quads', type: 'isolation', sets: '3x12', desc: 'Pause at top' },
-    { name: 'Calf Raise', muscle: 'Calves', type: 'isolation', sets: '4x15', desc: 'Full ROM, stretch at bottom' },
-  ],
-  Shoulders: [
-    { name: 'Lateral Raise', muscle: 'Shoulders', type: 'isolation', sets: '4x15', desc: 'Slight forward lean, lead with elbow' },
-    { name: 'DB Front Raise', muscle: 'Shoulders', type: 'isolation', sets: '3x12', desc: 'Alternate arms, controlled' },
-  ],
-  Arms: [
-    { name: 'Barbell Curl', muscle: 'Biceps', type: 'isolation', sets: '3x12', desc: 'Strict form, no swing' },
-    { name: 'Hammer Curl', muscle: 'Biceps', type: 'isolation', sets: '3x12', desc: 'Neutral grip' },
-    { name: 'Tricep Pushdown', muscle: 'Triceps', type: 'isolation', sets: '3x15', desc: 'Lock out at bottom' },
-    { name: 'Skull Crusher', muscle: 'Triceps', type: 'isolation', sets: '3x12', desc: 'Lower to forehead, extend up' },
-  ],
+const GOAL_MAP = {
+  fat_loss: ['fat_loss', 'Fat Loss', 'Endurance'],
+  hypertrophy: ['Hypertrophy', 'hypertrophy'],
+  endurance: ['Endurance', 'endurance', 'Stay Active'],
+  maintenance: ['Maintenance', 'maintenance', 'Stay Active'],
 };
 
-const CARDIO = [
-  { name: 'Steady-State Run', muscle: 'Cardio', type: 'cardio', sets: '20-30 min', desc: '65-75% max HR' },
-  { name: 'Rowing Machine', muscle: 'Cardio', type: 'cardio', sets: '15-20 min', desc: 'Full body, 70% effort' },
-  { name: 'Jump Rope', muscle: 'Cardio', type: 'cardio', sets: '3x5 min', desc: '1 min rest between sets' },
-  { name: 'Cycling', muscle: 'Cardio', type: 'cardio', sets: '20-40 min', desc: 'Zone 2 effort' },
-  { name: 'HIIT Sprints', muscle: 'Cardio', type: 'cardio', sets: '8x30s', desc: '30s on, 60s off' },
-];
-
 const DAY_SPLITS = {
-  2: [['Chest', 'Back', 'Arms'], ['Legs', 'Shoulders']],
+  2: [['Legs', 'Core'], ['Chest', 'Back', 'Shoulders']],
   3: [['Chest', 'Triceps'], ['Back', 'Biceps'], ['Legs', 'Shoulders']],
-  4: [['Chest', 'Triceps'], ['Back', 'Biceps'], ['Legs'], ['Shoulders', 'Arms']],
-  5: [['Chest'], ['Back'], ['Legs'], ['Shoulders', 'Arms'], ['Full Body']],
-  6: [['Chest', 'Triceps'], ['Back', 'Biceps'], ['Legs'], ['Chest', 'Shoulders'], ['Back', 'Arms'], ['Legs']],
+  4: [['Chest', 'Triceps'], ['Back', 'Biceps'], ['Legs'], ['Shoulders']],
+  5: [['Chest'], ['Back'], ['Legs'], ['Shoulders'], ['Full Body']],
+  6: [['Chest', 'Triceps'], ['Back', 'Biceps'], ['Legs'], ['Chest', 'Shoulders'], ['Back'], ['Legs']],
 };
 
 export function getWorkoutPlan(profile) {
-  const { goal, days = 3, sessionLength = 'medium', age = 30 } = profile;
-  const daysCount = days.length || 3;
-  const splits = DAY_SPLITS[Math.min(Math.max(daysCount, 2), 6)];
-  
-  const isElder = age > 50;
-  const compoundSets = isElder
-    ? COMPOUND.map((e) => ({ ...e, sets: e.sets.replace(/x\d+/, 'x8') }))
-    : COMPOUND;
+  const { goal, days = [], sessionLength = 'medium', age = 30 } = profile;
+  const daysCount = Math.min(Math.max((days.length || 3), 2), 6);
+  const splits = DAY_SPLITS[daysCount];
+  const goalKeys = GOAL_MAP[goal] || [goal];
+  const ageKey = age >= 60 ? '60+' : '18-60';
+  const durationMap = { short: 'Short', medium: 'Medium', long: 'Long' };
+  const maxDuration = durationMap[sessionLength] || 'Medium';
+  const durationPriority = { Short: 1, Medium: 2, Long: 3 };
+  const maxPriority = durationPriority[maxDuration];
 
   return splits.map((muscles, i) => {
-    let exercises = [];
+    const filtered = EXERCISE_DB.filter((ex) => {
+      const goalMatch = ex.goals.some((g) => goalKeys.includes(g));
+      const ageMatch = ex.ageRange.includes(ageKey) || ex.ageRange.includes('18-60');
+      const durationMatch = durationPriority[ex.duration] <= maxPriority;
+      const muscleMatch = muscles.some((m) => ex.category.includes(m)) || muscles.includes('Full Body');
+      return goalMatch && ageMatch && durationMatch && (muscleMatch || muscles.includes('Full Body'));
+    });
 
-    // Always include some compound lifts
-    const relevantCompounds = compoundSets.filter((e) =>
-      muscles.includes(e.muscle) || muscles.includes('Full Body')
-    );
-    exercises.push(...relevantCompounds.slice(0, sessionLength === 'short' ? 2 : 3));
-
-    // Add isolation based on session length
-    if (sessionLength !== 'short') {
-      muscles.forEach((m) => {
-        const iso = ISOLATION[m] || [];
-        const count = sessionLength === 'long' ? 2 : 1;
-        exercises.push(...iso.slice(0, count));
-      });
-    }
-
-    // Add cardio for fat_loss or endurance
-    if ((goal === 'fat_loss' || goal === 'endurance') && sessionLength !== 'short') {
-      exercises.push(CARDIO[goal === 'endurance' ? 0 : 4]);
-    }
+    const maxEx = sessionLength === 'short' ? 4 : sessionLength === 'medium' ? 6 : 9;
 
     return {
       day: i + 1,
       muscles,
-      exercises: exercises.slice(0, sessionLength === 'short' ? 4 : sessionLength === 'medium' ? 7 : 10),
+      exercises: filtered.slice(0, maxEx).map((ex) => ({
+        name: ex.name,
+        muscle: ex.category,
+        type: ex.focus.toLowerCase(),
+        sets: `${ex.sets}x${ex.reps}`,
+        desc: ex.instructions,
+        rest: ex.rest,
+      })),
     };
   });
 }
