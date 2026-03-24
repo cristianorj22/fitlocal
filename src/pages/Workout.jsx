@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getProfile } from '../lib/storage';
 import { getWorkoutPlan, restTimeByGoal } from '../lib/exercises';
+import PullToRefresh from '../components/PullToRefresh';
 import RestTimer from '../components/RestTimer';
 import { ChevronDown, ChevronUp, Clock, Zap } from 'lucide-react';
 
@@ -26,7 +27,10 @@ export default function Workout() {
   const completedCount = Object.values(completed).filter(Boolean).length;
   const total = dayData?.exercises?.length || 0;
 
+  const handleRefresh = () => new Promise((res) => setTimeout(res, 600));
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="max-w-lg mx-auto p-5 space-y-5">
       <div className="pt-4">
         <h1 className="text-2xl font-bold">Workout</h1>
@@ -113,5 +117,6 @@ export default function Workout() {
 
       <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
     </div>
+    </PullToRefresh>
   );
 }
