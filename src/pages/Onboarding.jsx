@@ -1,11 +1,13 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react';
-import { AppInput } from '../components/AppInput';
+import { useEffect, useState } from 'react';
+import { AppInput, AppSelect } from '../components/AppInput';
 import BottomSheetSelect from '../components/BottomSheetSelect';
+import HealthDisclaimer from '../components/HealthDisclaimer';
+import GoalEstimate from '../components/GoalEstimate';
 
 const ACTIVITY_OPTIONS = [
   { value: 'sedentary', label: 'Sedentary (desk job)' },
@@ -14,7 +16,6 @@ const ACTIVITY_OPTIONS = [
   { value: 'active', label: 'Active (6–7x/week)' },
   { value: 'very_active', label: 'Very Active (athlete)' },
 ];
-import GoalEstimate from '../components/GoalEstimate';
 
 const STEPS = ['intro', 'body', 'goal', 'schedule'];
 
@@ -34,6 +35,7 @@ const SESSIONS = [
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const [isAndroid, setIsAndroid] = useState(false);
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
     name: '', weight: '', height: '', age: '', gender: 'male', targetWeight: '',
@@ -41,6 +43,10 @@ export default function Onboarding() {
   });
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  useEffect(() => {
+    setIsAndroid(typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent));
+  }, []);
 
   const toggleDay = (d) => {
     set('days', form.days.includes(d) ? form.days.filter((x) => x !== d) : [...form.days, d]);
@@ -99,6 +105,7 @@ export default function Onboarding() {
                     </div>
                   ))}
                 </div>
+                <HealthDisclaimer />
               </div>
             )}
 
@@ -137,12 +144,24 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-2 block">Activity Level</label>
-                  <BottomSheetSelect
-                    label="Activity Level"
-                    value={form.activityLevel}
-                    onChange={(e) => set('activityLevel', e.target.value)}
-                    options={ACTIVITY_OPTIONS}
-                  />
+                  {isAndroid ? (
+                    <AppSelect
+                      aria-label="Activity Level"
+                      value={form.activityLevel}
+                      onChange={(e) => set('activityLevel', e.target.value)}
+                    >
+                      {ACTIVITY_OPTIONS.map((o) => (
+                        <option key={o.value} value={o.value}>{o.label}</option>
+                      ))}
+                    </AppSelect>
+                  ) : (
+                    <BottomSheetSelect
+                      label="Activity Level"
+                      value={form.activityLevel}
+                      onChange={(e) => set('activityLevel', e.target.value)}
+                      options={ACTIVITY_OPTIONS}
+                    />
+                  )}
                 </div>
               </div>
             )}

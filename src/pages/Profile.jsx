@@ -8,6 +8,7 @@ import GoalEstimate from '../components/GoalEstimate';
 import { useProfile, useSaveProfile } from '../lib/queries';
 import { AppInput } from '../components/AppInput';
 import { clearAppData } from '../lib/storage';
+import HealthDisclaimer from '../components/HealthDisclaimer';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss 🔥', hypertrophy: 'Hypertrophy 💪', endurance: 'Endurance 🏃', maintenance: 'Maintenance ⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -207,6 +208,8 @@ export default function Profile() {
           onConfirm={resetAll}
         />
       )}
+
+      <HealthDisclaimer className="px-1" />
 
       {/* Privacy & Support */}
       <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
