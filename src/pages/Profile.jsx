@@ -6,6 +6,7 @@ import DeleteAccountDialog from '../components/DeleteAccountDialog';
 import InfoTooltip from '../components/InfoTooltip';
 import GoalEstimate from '../components/GoalEstimate';
 import { useProfile, useSaveProfile } from '../lib/queries';
+import { AppInput } from '../components/AppInput';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss 🔥', hypertrophy: 'Hypertrophy 💪', endurance: 'Endurance 🏃', maintenance: 'Maintenance ⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -80,16 +81,16 @@ export default function Profile() {
         <h2 className="text-sm font-medium text-gray-400">Body Metrics</h2>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Weight (kg)', key: 'weight', type: 'number' },
-            { label: 'Height (cm)', key: 'height', type: 'number' },
-            { label: 'Age', key: 'age', type: 'number' },
-            { label: 'Target (kg)', key: 'targetWeight', type: 'number' },
-          ].map(({ label, key, type }) => (
+            { label: 'Weight (kg)', key: 'weight', inputMode: 'decimal' },
+            { label: 'Height (cm)', key: 'height', inputMode: 'decimal' },
+            { label: 'Age', key: 'age', inputMode: 'numeric' },
+            { label: 'Target (kg)', key: 'targetWeight', inputMode: 'decimal' },
+          ].map(({ label, key, inputMode }) => (
             <div key={key}>
               <label className="text-xs text-gray-500 mb-1 block">{label}</label>
-              <input
-                type={type}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+              <AppInput
+                inputMode={inputMode}
+                pattern="[0-9]*"
                 value={profile[key] || ''}
                 onChange={(e) => set(key, e.target.value)}
               />
@@ -162,12 +163,12 @@ export default function Profile() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Time (minutes)</label>
-                <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+                <AppInput inputMode="decimal" pattern="[0-9]*"
                   placeholder="e.g. 15.5" value={vo2Form.timeMin} onChange={(e) => setVo2Form((f) => ({ ...f, timeMin: e.target.value }))} />
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Heart Rate (bpm)</label>
-                <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+                <AppInput inputMode="numeric" pattern="[0-9]*"
                   placeholder="e.g. 155" value={vo2Form.heartRate} onChange={(e) => setVo2Form((f) => ({ ...f, heartRate: e.target.value }))} />
               </div>
             </div>

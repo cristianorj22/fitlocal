@@ -4,6 +4,7 @@ import { saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react';
+import { AppInput, AppSelect } from '../components/AppInput';
 import GoalEstimate from '../components/GoalEstimate';
 
 const STEPS = ['intro', 'body', 'goal', 'schedule'];
@@ -95,23 +96,23 @@ export default function Onboarding() {
             {step === 1 && (
               <div className="space-y-5">
                 <h2 className="text-2xl font-bold">Your Profile</h2>
-                <input className="input-field" placeholder="Name" value={form.name} onChange={(e) => set('name', e.target.value)} />
+                <AppInput placeholder="Name" autoComplete="given-name" value={form.name} onChange={(e) => set('name', e.target.value)} />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Weight (kg)</label>
-                    <input className="input-field" type="number" placeholder="70" value={form.weight} onChange={(e) => set('weight', e.target.value)} />
+                    <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="70" value={form.weight} onChange={(e) => set('weight', e.target.value)} />
                   </div>
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Height (cm)</label>
-                    <input className="input-field" type="number" placeholder="175" value={form.height} onChange={(e) => set('height', e.target.value)} />
+                    <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="175" value={form.height} onChange={(e) => set('height', e.target.value)} />
                   </div>
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Age</label>
-                    <input className="input-field" type="number" placeholder="25" value={form.age} onChange={(e) => set('age', e.target.value)} />
+                    <AppInput inputMode="numeric" pattern="[0-9]*" placeholder="25" value={form.age} onChange={(e) => set('age', e.target.value)} />
                   </div>
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Target (kg)</label>
-                    <input className="input-field" type="number" placeholder="65" value={form.targetWeight} onChange={(e) => set('targetWeight', e.target.value)} />
+                    <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="65" value={form.targetWeight} onChange={(e) => set('targetWeight', e.target.value)} />
                   </div>
                 </div>
                 <div>
@@ -127,13 +128,13 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <label className="text-xs text-gray-400 mb-2 block">Activity Level</label>
-                  <select className="input-field" value={form.activityLevel} onChange={(e) => set('activityLevel', e.target.value)}>
+                  <AppSelect value={form.activityLevel} onChange={(e) => set('activityLevel', e.target.value)}>
                     <option value="sedentary">Sedentary (desk job)</option>
                     <option value="light">Light (1-3x/week)</option>
                     <option value="moderate">Moderate (3-5x/week)</option>
                     <option value="active">Active (6-7x/week)</option>
                     <option value="very_active">Very Active (athlete)</option>
-                  </select>
+                  </AppSelect>
                 </div>
               </div>
             )}
@@ -206,21 +207,7 @@ export default function Onboarding() {
         </div>
       </div>
 
-      <style>{`
-        .input-field {
-          width: 100%;
-          background: rgb(17 24 39);
-          border: 1px solid rgb(55 65 81);
-          border-radius: 12px;
-          padding: 12px 16px;
-          color: white;
-          font-size: 15px;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        .input-field:focus { border-color: rgb(52 211 153); }
-        .input-field option { background: rgb(17 24 39); }
-      `}</style>
+
     </div>
   );
 }

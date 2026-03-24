@@ -79,10 +79,11 @@ export default function DeleteAccountDialog({ onClose, onConfirm }) {
               <input
                 autoFocus
                 type="text"
+                autoCapitalize="characters"
                 value={typed}
                 onChange={(e) => setTyped(e.target.value.toUpperCase())}
                 placeholder="Type DELETE to confirm"
-                className="w-full bg-gray-800 border border-gray-700 focus:border-red-500 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors"
+                className="w-full min-h-[44px] bg-gray-800 border border-gray-700 focus:border-red-500 focus:ring-2 focus:ring-red-500/30 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors"
               />
             </>
           )}

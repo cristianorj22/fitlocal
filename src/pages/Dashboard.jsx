@@ -141,8 +141,9 @@ export default function Dashboard() {
         {showAddWeight ? (
           <div className="flex gap-3">
             <input
-              type="number"
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-emerald-500"
+              inputMode="decimal"
+              pattern="[0-9]*"
+              className="flex-1 min-h-[44px] bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
               placeholder="Weight in kg"
               value={newWeight}
               onChange={(e) => setNewWeight(e.target.value)}
