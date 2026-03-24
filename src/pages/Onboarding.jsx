@@ -4,6 +4,7 @@ import { saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react';
+import GoalEstimate from '../components/GoalEstimate';
 
 const STEPS = ['intro', 'body', 'goal', 'schedule'];
 
@@ -152,6 +153,7 @@ export default function Onboarding() {
                     </button>
                   ))}
                 </div>
+                {form.goal && <GoalEstimate goal={form.goal} />}
               </div>
             )}
 

@@ -3,6 +3,8 @@ import { getProfile, saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros, calcVO2Max, vo2Category } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
+import InfoTooltip from '../components/InfoTooltip';
+import GoalEstimate from '../components/GoalEstimate';
 
 const GOAL_LABELS = { fat_loss: 'Fat Loss 🔥', hypertrophy: 'Hypertrophy 💪', endurance: 'Endurance 🏃', maintenance: 'Maintenance ⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -92,11 +94,11 @@ export default function Profile() {
         </div>
         <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800">
           <div className="text-center">
-            <div className="text-xs text-gray-500">BMI</div>
+            <div className="text-xs text-gray-500 flex items-center justify-center">BMI <InfoTooltip text="Body Mass Index. Healthy range: 18.5–24.9 (WHO)." /></div>
             <div className="text-lg font-bold">{profile.bmi?.toFixed(1)}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-gray-500">TDEE</div>
+            <div className="text-xs text-gray-500 flex items-center justify-center">TDEE <InfoTooltip text="Total Daily Energy Expenditure — calories you burn per day including activity. Used to set your calorie target." /></div>
             <div className="text-lg font-bold">{Math.round(profile.tdee || 0)} kcal</div>
           </div>
         </div>
@@ -127,6 +129,9 @@ export default function Profile() {
           ))}
         </div>
       </div>
+
+      {/* Goal estimate */}
+      {profile.goal && <GoalEstimate goal={profile.goal} />}
 
       {/* Save */}
       <button onClick={recalcAndSave}
