@@ -72,7 +72,10 @@ export default function Dashboard() {
           <div className="text-sm text-gray-400">{checkedIn ? 'Keep up the streak 🔥' : 'Log your presence'}</div>
         </div>
         {!checkedIn && (
-          <button onClick={() => checkIn.mutate()} disabled={checkIn.isPending}
+          <button
+            aria-label="Check in for today"
+            onClick={() => checkIn.mutate()}
+            disabled={checkIn.isPending}
             className="px-4 py-2 bg-emerald-500 rounded-xl text-sm font-semibold disabled:opacity-60">
             {checkIn.isPending ? '...' : 'Check In'}
           </button>
@@ -154,7 +157,7 @@ export default function Dashboard() {
             <button onClick={() => setShowAddWeight(false)} className="px-4 py-3 bg-gray-800 rounded-xl text-sm text-gray-400">Cancel</button>
           </div>
         ) : (
-          <button onClick={() => setShowAddWeight(true)} className="w-full flex items-center justify-center gap-2 text-sm text-gray-400">
+          <button aria-label="Log today's weight" onClick={() => setShowAddWeight(true)} className="w-full flex items-center justify-center gap-2 min-h-[44px] text-sm text-gray-400">
             <Plus className="w-5 h-5" /> Log Today's Weight
           </button>
         )}

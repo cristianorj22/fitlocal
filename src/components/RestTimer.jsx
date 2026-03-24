@@ -64,12 +64,14 @@ export default function RestTimer({ defaultSeconds = 90 }) {
       <div className="flex-1">
         <div className="text-sm text-gray-400 mb-2">Rest Timer</div>
         <div className="flex gap-2">
-          <button onClick={() => setRunning((r) => !r)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 rounded-xl text-sm font-medium">
+          <button
+            aria-label={running ? 'Pause rest timer' : 'Start rest timer'}
+            onClick={() => setRunning((r) => !r)}
+            className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-emerald-500 rounded-xl text-sm font-medium">
             {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             {running ? 'Pause' : 'Start'}
           </button>
-          <button onClick={reset} className="p-3 min-w-[44px] min-h-[44px] bg-gray-800 rounded-xl flex items-center justify-center">
+          <button aria-label="Reset rest timer" onClick={reset} className="p-3 min-w-[44px] min-h-[44px] bg-gray-800 rounded-xl flex items-center justify-center">
             <RotateCcw className="w-4 h-4 text-gray-400" />
           </button>
         </div>

@@ -4,7 +4,16 @@ import { saveProfile } from '../lib/storage';
 import { calcBMI, calcBMR, calcTDEE, calcMacros } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react';
-import { AppInput, AppSelect } from '../components/AppInput';
+import { AppInput } from '../components/AppInput';
+import BottomSheetSelect from '../components/BottomSheetSelect';
+
+const ACTIVITY_OPTIONS = [
+  { value: 'sedentary', label: 'Sedentary (desk job)' },
+  { value: 'light', label: 'Light (1–3x/week)' },
+  { value: 'moderate', label: 'Moderate (3–5x/week)' },
+  { value: 'active', label: 'Active (6–7x/week)' },
+  { value: 'very_active', label: 'Very Active (athlete)' },
+];
 import GoalEstimate from '../components/GoalEstimate';
 
 const STEPS = ['intro', 'body', 'goal', 'schedule'];
@@ -128,13 +137,12 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <label className="text-xs text-gray-400 mb-2 block">Activity Level</label>
-                  <AppSelect value={form.activityLevel} onChange={(e) => set('activityLevel', e.target.value)}>
-                    <option value="sedentary">Sedentary (desk job)</option>
-                    <option value="light">Light (1-3x/week)</option>
-                    <option value="moderate">Moderate (3-5x/week)</option>
-                    <option value="active">Active (6-7x/week)</option>
-                    <option value="very_active">Very Active (athlete)</option>
-                  </AppSelect>
+                  <BottomSheetSelect
+                    label="Activity Level"
+                    value={form.activityLevel}
+                    onChange={(e) => set('activityLevel', e.target.value)}
+                    options={ACTIVITY_OPTIONS}
+                  />
                 </div>
               </div>
             )}

@@ -55,6 +55,7 @@ export default function PullToRefresh({ onRefresh, children }) {
       >
         <div className={`w-9 h-9 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center shadow-lg`}>
           <RefreshCw
+            aria-hidden="true"
             className={`w-4 h-4 ${triggered ? 'text-emerald-400' : 'text-gray-500'} transition-colors`}
             style={{ transform: `rotate(${progress * 360}deg)`, transition: refreshing ? 'none' : undefined,
               animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}

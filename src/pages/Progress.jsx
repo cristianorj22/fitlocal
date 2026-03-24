@@ -57,8 +57,10 @@ export default function Progress() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold">Progress Photos</h2>
-          <button onClick={() => fileRef.current?.click()}
-            className="flex items-center gap-2 px-3 py-2 bg-emerald-500 rounded-xl text-sm font-medium">
+          <button
+            aria-label="Add progress photo"
+            onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-2 px-3 py-2 min-h-[44px] bg-emerald-500 rounded-xl text-sm font-medium">
             <Camera className="w-4 h-4" /> Add Photo
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
@@ -87,10 +89,10 @@ export default function Progress() {
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm text-gray-400">{new Date(photos[selected]?.date).toLocaleDateString()}</span>
               <div className="flex gap-3">
-                <button onClick={() => handleDelete(selected)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg">
+                <button aria-label="Delete photo" onClick={() => handleDelete(selected)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg">
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
-                <button onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gray-800 rounded-lg">
+                <button aria-label="Close photo" onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gray-800 rounded-lg">
                   <X className="w-4 h-4" />
                 </button>
               </div>

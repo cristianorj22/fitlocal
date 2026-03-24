@@ -7,6 +7,8 @@ export default function InfoTooltip({ text }) {
   return (
     <span className="relative inline-flex items-center ml-1">
       <button
+        aria-label="More information"
+        aria-expanded={show}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
         onTouchStart={(e) => { e.preventDefault(); setShow((s) => !s); }}

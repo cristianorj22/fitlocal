@@ -25,7 +25,7 @@ export default function DeleteAccountDialog({ onClose, onConfirm }) {
             </div>
             <span className="font-semibold">Delete All Data</span>
           </div>
-          <button onClick={onClose} className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-gray-800 transition-colors">
+          <button aria-label="Close dialog" onClick={onClose} className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-gray-800 transition-colors">
             <X className="w-4 h-4 text-gray-500" />
           </button>
         </div>

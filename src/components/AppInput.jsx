@@ -18,6 +18,7 @@ export function AppInput({ className = '', ...props }) {
   );
 }
 
+// AppSelect kept for non-mobile fallback but BottomSheetSelect is preferred
 export function AppSelect({ children, className = '', ...props }) {
   return (
     <div className="relative">

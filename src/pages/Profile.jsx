@@ -139,7 +139,10 @@ export default function Profile() {
       {profile.goal && <GoalEstimate goal={profile.goal} />}
 
       {/* Save */}
-      <button onClick={recalcAndSave} disabled={saveProfile.isPending}
+      <button
+        aria-label="Recalculate and save profile"
+        onClick={recalcAndSave}
+        disabled={saveProfile.isPending}
         className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-emerald-600' : 'bg-emerald-500'} disabled:opacity-60`}>
         <RefreshCw className={`w-5 h-5 ${saveProfile.isPending ? 'animate-spin' : ''}`} />
         {saved ? 'Recalculated & Saved!' : 'Recalculate & Save'}
@@ -147,7 +150,11 @@ export default function Profile() {
 
       {/* VO2 Max */}
       <div className="bg-gray-900 rounded-2xl overflow-hidden">
-        <button className="w-full flex items-center justify-between p-4" onClick={() => setShowVO2(!showVO2)}>
+        <button
+        aria-label={showVO2 ? 'Collapse VO2 max calculator' : 'Expand VO2 max calculator'}
+        aria-expanded={showVO2}
+        className="w-full flex items-center justify-between p-4"
+        onClick={() => setShowVO2(!showVO2)}>
           <span className="font-semibold">VO₂ Max — Rockport Test</span>
           {showVO2 ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
         </button>
@@ -185,6 +192,7 @@ export default function Profile() {
 
       {/* Delete Account */}
       <button
+        aria-label="Delete all local data"
         onClick={() => setShowDeleteDialog(true)}
         className="w-full py-3 rounded-2xl border border-red-900/60 text-red-500 text-sm font-medium hover:bg-red-500/5 transition-colors">
         Delete All Data
