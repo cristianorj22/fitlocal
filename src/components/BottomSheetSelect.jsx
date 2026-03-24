@@ -117,7 +117,11 @@ export default function BottomSheetSelect({
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
               className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border rounded-t-3xl overflow-hidden shadow-lg outline-none"
-              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+              style={{
+                paddingBottom: 'env(safe-area-inset-bottom)',
+                paddingLeft:   'env(safe-area-inset-left)',
+                paddingRight:  'env(safe-area-inset-right)',
+              }}
             >
               <div className="flex justify-center pt-3 pb-1">
                 <div className="w-10 h-1 rounded-full bg-muted" aria-hidden="true" />

@@ -1,5 +1,18 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
+// Semantic color tokens — no hardcoded rgb/hex in chart props
+const C = {
+  grid:    '#1f2937', // gray-800
+  axis:    '#6b7280', // gray-500
+  line:    '#34d399', // emerald-400
+  dot:     '#34d399',
+  target:  '#fbbf24', // amber-400
+  tipBg:   '#1f2937',
+  tipBorder:'#374151',
+  tipVal:  '#34d399',
+  tipDate: '#9ca3af',
+};
+
 export default function WeightChart({ log, targetWeight }) {
   if (!log || log.length === 0) {
     return (
@@ -31,14 +44,14 @@ export default function WeightChart({ log, targetWeight }) {
       <h3 className="text-sm font-medium text-muted-foreground mb-4">Weight Progress</h3>
       <ResponsiveContainer width="100%" height={180}>
         <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgb(31 41 55)" />
-          <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'rgb(107 114 128)' }} tickLine={false} axisLine={false} />
-          <YAxis tick={{ fontSize: 10, fill: 'rgb(107 114 128)' }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
+          <CartesianGrid strokeDasharray="3 3" stroke={C.grid} />
+          <XAxis dataKey="date" tick={{ fontSize: 10, fill: C.axis }} tickLine={false} axisLine={false} />
+          <YAxis tick={{ fontSize: 10, fill: C.axis }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
           <Tooltip content={<CustomTooltip />} />
           {targetWeight && (
-            <ReferenceLine y={parseFloat(targetWeight)} stroke="rgb(251 191 36)" strokeDasharray="4 4" label={{ value: 'Target', fill: 'rgb(251 191 36)', fontSize: 10 }} />
+            <ReferenceLine y={parseFloat(targetWeight)} stroke={C.target} strokeDasharray="4 4" label={{ value: 'Target', fill: C.target, fontSize: 10 }} />
           )}
-          <Line type="monotone" dataKey="kg" stroke="rgb(52 211 153)" strokeWidth={2.5} dot={false} activeDot={{ r: 5, fill: 'rgb(52 211 153)' }} />
+          <Line type="monotone" dataKey="kg" stroke={C.line} strokeWidth={2.5} dot={false} activeDot={{ r: 5, fill: C.dot }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
