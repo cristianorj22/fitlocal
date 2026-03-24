@@ -20,6 +20,8 @@ Any change pushed to the repo will also be reflected in the Base44 Builder.
 ```
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=your_backend_url
+VITE_SUPPORT_EMAIL=your_support_email
+VITE_PRIVACY_POLICY_URL=https://your-domain.com/privacy
 
 e.g.
 VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6

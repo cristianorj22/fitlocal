@@ -66,12 +66,12 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Progress */}
         <div className="flex gap-2 mb-8">
           {STEPS.map((_, i) => (
-            <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= step ? 'bg-emerald-400' : 'bg-gray-800'}`} />
+            <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= step ? 'bg-emerald-500' : 'bg-muted'}`} />
           ))}
         </div>
 
@@ -90,11 +90,11 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <h1 className="text-4xl font-bold mb-3">FitLocal</h1>
-                  <p className="text-gray-400 text-lg">Your private fitness tracker.<br/>100% local. Zero cloud.</p>
+                  <p className="text-muted-foreground text-lg">Your private fitness tracker.<br/>100% local. Zero cloud.</p>
                 </div>
-                <div className="bg-gray-900 rounded-2xl p-4 text-left space-y-3">
+                <div className="bg-card rounded-2xl p-4 text-left space-y-3 border border-border">
                   {['BMI & TDEE calculations', 'Smart workout planner', 'Macro tracking', 'Progress photos & charts'].map((f) => (
-                    <div key={f} className="flex items-center gap-3 text-sm text-gray-300">
+                    <div key={f} className="flex items-center gap-3 text-sm text-foreground">
                       <span className="text-emerald-400">✓</span> {f}
                     </div>
                   ))}
@@ -108,35 +108,35 @@ export default function Onboarding() {
                 <AppInput placeholder="Name" autoComplete="given-name" value={form.name} onChange={(e) => set('name', e.target.value)} />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Weight (kg)</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">Weight (kg)</label>
                     <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="70" value={form.weight} onChange={(e) => set('weight', e.target.value)} />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Height (cm)</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">Height (cm)</label>
                     <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="175" value={form.height} onChange={(e) => set('height', e.target.value)} />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Age</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">Age</label>
                     <AppInput inputMode="numeric" pattern="[0-9]*" placeholder="25" value={form.age} onChange={(e) => set('age', e.target.value)} />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Target (kg)</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">Target (kg)</label>
                     <AppInput inputMode="decimal" pattern="[0-9]*" placeholder="65" value={form.targetWeight} onChange={(e) => set('targetWeight', e.target.value)} />
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-2 block">Gender</label>
+                  <label className="text-xs text-muted-foreground mb-2 block">Gender</label>
                   <div className="grid grid-cols-2 gap-3">
                     {['male', 'female'].map((g) => (
                       <button key={g} onClick={() => set('gender', g)}
-                        className={`py-3 rounded-xl capitalize text-sm font-medium transition-all ${form.gender === g ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'}`}>
+                        className={`py-3 rounded-xl capitalize text-sm font-medium transition-all ${form.gender === g ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground'}`}>
                         {g}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-2 block">Activity Level</label>
+                  <label className="text-xs text-muted-foreground mb-2 block">Activity Level</label>
                   <BottomSheetSelect
                     label="Activity Level"
                     value={form.activityLevel}
@@ -153,11 +153,11 @@ export default function Onboarding() {
                 <div className="space-y-3">
                   {GOALS.map((g) => (
                     <button key={g.id} onClick={() => set('goal', g.id)}
-                      className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left ${form.goal === g.id ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-800 bg-gray-900'}`}>
+                      className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left ${form.goal === g.id ? 'border-emerald-500 bg-emerald-500/10' : 'border-border bg-card'}`}>
                       <span className="text-3xl">{g.emoji}</span>
                       <div>
                         <div className="font-semibold">{g.label}</div>
-                        <div className="text-sm text-gray-400">{g.desc}</div>
+                        <div className="text-sm text-muted-foreground">{g.desc}</div>
                       </div>
                     </button>
                   ))}
@@ -170,24 +170,24 @@ export default function Onboarding() {
               <div className="space-y-5">
                 <h2 className="text-2xl font-bold">Your Schedule</h2>
                 <div>
-                  <label className="text-xs text-gray-400 mb-2 block">Training Days</label>
+                  <label className="text-xs text-muted-foreground mb-2 block">Training Days</label>
                   <div className="flex gap-2 flex-wrap">
                     {DAYS.map((d) => (
                       <button key={d} onClick={() => toggleDay(d)}
-                        className={`w-12 h-12 rounded-xl text-sm font-medium transition-all ${form.days.includes(d) ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400'}`}>
+                        className={`w-12 h-12 rounded-xl text-sm font-medium transition-all ${form.days.includes(d) ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground'}`}>
                         {d}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-2 block">Session Length</label>
+                  <label className="text-xs text-muted-foreground mb-2 block">Session Length</label>
                   <div className="space-y-2">
                     {SESSIONS.map((s) => (
                       <button key={s.id} onClick={() => set('sessionLength', s.id)}
-                        className={`w-full flex justify-between items-center p-4 rounded-xl border transition-all ${form.sessionLength === s.id ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-800 bg-gray-900'}`}>
+                        className={`w-full flex justify-between items-center p-4 rounded-xl border transition-all ${form.sessionLength === s.id ? 'border-emerald-500 bg-emerald-500/10' : 'border-border bg-card'}`}>
                         <span className="font-medium">{s.label}</span>
-                        <span className="text-sm text-gray-400">{s.desc}</span>
+                        <span className="text-sm text-muted-foreground">{s.desc}</span>
                       </button>
                     ))}
                   </div>
@@ -201,14 +201,14 @@ export default function Onboarding() {
         <div className="flex gap-3 mt-8">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)}
-              className="flex-1 py-4 rounded-2xl bg-gray-800 text-white font-medium flex items-center justify-center gap-2">
+              className="flex-1 py-4 rounded-2xl bg-muted text-foreground font-medium flex items-center justify-center gap-2">
               <ChevronLeft className="w-5 h-5" /> Back
             </button>
           )}
           <button
             onClick={() => step < STEPS.length - 1 ? setStep(step + 1) : finish()}
             disabled={!canNext()}
-            className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${canNext() ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}>
+            className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${canNext() ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground cursor-not-allowed'}`}>
             {step < STEPS.length - 1 ? 'Continue' : 'Start Training'}
             <ChevronRight className="w-5 h-5" />
           </button>

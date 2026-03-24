@@ -71,7 +71,7 @@ export default function AppLayout() {
   return (
     <NavContext.Provider value={navCtx}>
     <div
-      className="min-h-screen bg-gray-950 text-white flex flex-col"
+      className="min-h-screen bg-background text-foreground flex flex-col"
       style={{
         paddingTop: 'env(safe-area-inset-top)',
         paddingLeft: 'env(safe-area-inset-left)',
@@ -80,7 +80,7 @@ export default function AppLayout() {
     >
       {/* Back button header — only on non-root screens */}
       {!isRootTab && (
-        <div className="flex items-center px-2 py-1 border-b border-gray-800 bg-gray-950/95 backdrop-blur z-40">
+        <div className="flex items-center px-2 py-1 border-b border-border bg-background/95 backdrop-blur z-40">
           <button
             onClick={handleBack}
             className="flex items-center gap-1 text-emerald-400 text-sm font-medium min-w-[44px] min-h-[44px] px-3"
@@ -110,7 +110,7 @@ export default function AppLayout() {
       </main>
 
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur border-t border-gray-800 z-50"
+        className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border z-50"
         style={{
           paddingBottom: 'env(safe-area-inset-bottom)',
           paddingLeft: 'env(safe-area-inset-left)',
@@ -125,7 +125,7 @@ export default function AppLayout() {
               aria-current={currentTab === to ? 'page' : undefined}
               onClick={() => handleTabPress(to)}
               className={`flex-1 flex flex-col items-center py-3 gap-1 text-xs transition-colors min-h-[56px] ${
-                currentTab === to ? 'text-emerald-400' : 'text-gray-500'
+                currentTab === to ? 'text-emerald-500' : 'text-muted-foreground'
               }`}
             >
               <Icon className="w-6 h-6" />

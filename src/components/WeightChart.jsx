@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function WeightChart({ log, targetWeight }) {
   if (!log || log.length === 0) {
     return (
-      <div className="bg-gray-900 rounded-2xl p-6 flex items-center justify-center h-48 text-gray-600 text-sm">
+      <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-center h-48 text-muted-foreground text-sm">
         No weight entries yet
       </div>
     );
@@ -17,9 +17,9 @@ export default function WeightChart({ log, targetWeight }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload?.length) {
       return (
-        <div className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm">
+        <div className="bg-card border border-border rounded-xl px-3 py-2 text-sm shadow-sm">
           <span className="text-emerald-400 font-bold">{payload[0].value} kg</span>
-          <div className="text-gray-400 text-xs">{payload[0].payload.date}</div>
+          <div className="text-muted-foreground text-xs">{payload[0].payload.date}</div>
         </div>
       );
     }
@@ -27,8 +27,8 @@ export default function WeightChart({ log, targetWeight }) {
   };
 
   return (
-    <div className="bg-gray-900 rounded-2xl p-4">
-      <h3 className="text-sm font-medium text-gray-400 mb-4">Weight Progress</h3>
+    <div className="bg-card border border-border rounded-2xl p-4">
+      <h3 className="text-sm font-medium text-muted-foreground mb-4">Weight Progress</h3>
       <ResponsiveContainer width="100%" height={180}>
         <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgb(31 41 55)" />
