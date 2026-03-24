@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      # Melhora detecção de mudanças em alguns ambientes (ex.: Docker no Windows)
+      CHOKIDAR_USEPOLLING: "true"
+    stdin_open: true
+    tty: true

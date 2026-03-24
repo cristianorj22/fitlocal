@@ -2,8 +2,10 @@ import { useState, useRef } from 'react';
 import WeightChart from '../components/WeightChart';
 import { Camera, Trash2, X } from 'lucide-react';
 import { useProfile, useWeightLog, usePhotos, useSavePhoto, useDeletePhoto } from '../lib/queries';
+import { useI18n } from '../contexts/LocaleContext.jsx';
 
 export default function Progress() {
+  const { t, formatDateShort } = useI18n();
   const { data: profile } = useProfile();
   const { data: weightLog = [] } = useWeightLog();
   const { data: photos = [] } = usePhotos();
@@ -15,8 +17,6 @@ export default function Progress() {
 
   if (!profile) return null;
 
-  // Compress + resize before storing to avoid localStorage quota exhaustion.
-  // Uses a canvas to cap width at 1024px and encode as JPEG @ 75% quality.
   const compressImage = (file) =>
     new Promise((resolve) => {
       const img = new Image();
@@ -29,16 +29,11 @@ export default function Progress() {
         canvas.height = Math.round(img.height * scale);
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // Capture output before releasing resources
         const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
 
-        // Release blob URL immediately to free native memory
         URL.revokeObjectURL(objectUrl);
-        // Explicitly zero canvas dimensions — frees the backing pixel buffer
-        // in WebKit/Blink without waiting for GC, critical on low-end WebViews
         canvas.width = 0;
         canvas.height = 0;
-        // Drop img src so the decoded bitmap is released from memory
         img.src = '';
 
         resolve(dataUrl);
@@ -52,7 +47,6 @@ export default function Progress() {
     const dataUrl = await compressImage(file);
     savePhoto.mutate({ dataUrl, note });
     setNote('');
-    // Reset input so the same file can be re-selected
     e.target.value = '';
   };
 
@@ -64,34 +58,34 @@ export default function Progress() {
   return (
     <div className="max-w-lg mx-auto p-5 space-y-6">
       <div className="pt-4">
-        <h1 className="text-2xl font-bold">Progress</h1>
+        <h1 className="text-2xl font-bold">{t('progress.title')}</h1>
       </div>
 
       <WeightChart log={weightLog} targetWeight={profile.targetWeight} />
 
-      {/* Stats summary */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Start', val: `${profile.weight} kg` },
-          { label: 'Current', val: `${weightLog[weightLog.length - 1]?.kg || profile.weight} kg` },
-          { label: 'Target', val: `${profile.targetWeight || '—'} kg` },
+          { labelKey: 'progress.start', val: `${profile.weight} kg` },
+          { labelKey: 'progress.current', val: `${weightLog[weightLog.length - 1]?.kg || profile.weight} kg` },
+          { labelKey: 'progress.target', val: `${profile.targetWeight || '—'} kg` },
         ].map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-3 text-center">
-            <div className="text-xs text-muted-foreground mb-1">{s.label}</div>
+          <div key={s.labelKey} className="bg-card border border-border rounded-2xl p-3 text-center">
+            <div className="text-xs text-muted-foreground mb-1">{t(s.labelKey)}</div>
             <div className="font-bold text-sm">{s.val}</div>
           </div>
         ))}
       </div>
 
-      {/* Photo section */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold">Progress Photos</h2>
+          <h2 className="font-semibold">{t('progress.photos')}</h2>
           <button
-            aria-label="Add progress photo"
+            type="button"
+            aria-label={t('progress.addPhoto')}
             onClick={() => fileRef.current?.click()}
-            className="flex items-center gap-2 px-3 py-2 min-h-[44px] bg-emerald-500 rounded-xl text-sm font-medium">
-            <Camera className="w-4 h-4" /> Add Photo
+            className="flex items-center gap-2 px-3 py-2 min-h-[44px] bg-emerald-500 rounded-xl text-sm font-medium"
+          >
+            <Camera className="w-4 h-4" /> {t('progress.addPhoto')}
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
         </div>
@@ -99,35 +93,44 @@ export default function Progress() {
         {photos.length === 0 ? (
           <div className="bg-card border border-border rounded-2xl h-32 flex flex-col items-center justify-center gap-2 text-muted-foreground">
             <Camera className="w-8 h-8" />
-            <span className="text-sm">No photos yet</span>
+            <span className="text-sm">{t('progress.noPhotos')}</span>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-2">
             {photos.map((p, i) => (
-              <button key={i} onClick={() => setSelected(i)} className="aspect-square rounded-xl overflow-hidden">
-                <img src={p.dataUrl} alt={`Progress photo ${i + 1}`} className="w-full h-full object-cover" />
+              <button key={i} type="button" onClick={() => setSelected(i)} className="aspect-square rounded-xl overflow-hidden">
+                <img src={p.dataUrl} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Photo modal */}
       {selected !== null && (
         <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-5">
           <div className="w-full max-w-sm">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-sm text-muted-foreground">{new Date(photos[selected]?.date).toLocaleDateString()}</span>
+              <span className="text-sm text-muted-foreground">{formatDateShort(photos[selected]?.date)}</span>
               <div className="flex gap-3">
-                <button aria-label="Delete photo" onClick={() => handleDelete(selected)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg">
+                <button
+                  type="button"
+                  aria-label={t('progress.deletePhoto')}
+                  onClick={() => handleDelete(selected)}
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-red-500/20 rounded-lg"
+                >
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
-                <button aria-label="Close photo" onClick={() => setSelected(null)} className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-muted rounded-lg">
+                <button
+                  type="button"
+                  aria-label={t('progress.closePhoto')}
+                  onClick={() => setSelected(null)}
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-muted rounded-lg"
+                >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <img src={photos[selected]?.dataUrl} alt={`Progress photo enlarged ${selected + 1}`} className="w-full rounded-2xl" />
+            <img src={photos[selected]?.dataUrl} alt="" className="w-full rounded-2xl" />
             {photos[selected]?.note && <p className="text-sm text-muted-foreground mt-3">{photos[selected].note}</p>}
           </div>
         </div>

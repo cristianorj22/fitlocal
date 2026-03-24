@@ -68,6 +68,7 @@ export function getWorkoutPlan(profile) {
       day: i + 1,
       muscles,
       exercises: filtered.slice(0, maxEx).map((ex) => ({
+        exerciseId: ex.id,
         name: ex.name,
         muscle: ex.category,
         type: ex.focus.toLowerCase(),

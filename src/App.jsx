@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import AppLayout from './components/AppLayout';
 import AppShellFallback from './components/AppShellFallback';
 import { getProfile } from './lib/storage';
+import { LocaleProvider } from './contexts/LocaleContext.jsx';
 
 const Onboarding = lazy(() => import('./pages/Onboarding'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -48,10 +49,12 @@ const MainApp = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
-      <Router>
-        <MainApp />
-      </Router>
-      <Toaster />
+      <LocaleProvider>
+        <Router>
+          <MainApp />
+        </Router>
+        <Toaster />
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }

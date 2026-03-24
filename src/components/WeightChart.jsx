@@ -1,4 +1,5 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { useI18n } from '../contexts/LocaleContext.jsx';
 
 // Semantic color tokens — no hardcoded rgb/hex in chart props
 const C = {
@@ -41,7 +42,7 @@ export default function WeightChart({ log, targetWeight }) {
 
   return (
     <div className="bg-card border border-border rounded-2xl p-4">
-      <h3 className="text-sm font-medium text-muted-foreground mb-4">Weight Progress</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mb-4">{t('dashboard.weightProgress')}</h3>
       <ResponsiveContainer width="100%" height={180}>
         <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={C.grid} />
@@ -49,7 +50,12 @@ export default function WeightChart({ log, targetWeight }) {
           <YAxis tick={{ fontSize: 10, fill: C.axis }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
           <Tooltip content={<CustomTooltip />} />
           {targetWeight && (
-            <ReferenceLine y={parseFloat(targetWeight)} stroke={C.target} strokeDasharray="4 4" label={{ value: 'Target', fill: C.target, fontSize: 10 }} />
+            <ReferenceLine
+              y={parseFloat(targetWeight)}
+              stroke={C.target}
+              strokeDasharray="4 4"
+              label={{ value: t('dashboard.targetLine'), fill: C.target, fontSize: 10 }}
+            />
           )}
           <Line type="monotone" dataKey="kg" stroke={C.line} strokeWidth={2.5} dot={false} activeDot={{ r: 5, fill: C.dot }} />
         </LineChart>

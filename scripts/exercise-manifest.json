@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "name": "Chair Squat",
+    "slug": "chair-squat",
+    "instructions": "Sit down and stand up from a stable chair, focusing on control and balance. Keep your knees aligned."
+  },
+  {
+    "id": 2,
+    "name": "Wall Push-up",
+    "slug": "wall-push-up",
+    "instructions": "Place your hands on the wall at shoulder height. Lower your body in a straight line and push back up."
+  },
+  {
+    "id": 3,
+    "name": "Glute Bridge",
+    "slug": "glute-bridge",
+    "instructions": "Lying on your back, lift your hips until your thighs and torso are aligned. Contract your glutes."
+  },
+  {
+    "id": 4,
+    "name": "Resistance Band Row",
+    "slug": "resistance-band-row",
+    "instructions": "Sit with your legs straight, band attached to your feet. Pull the band towards your abdomen."
+  },
+  {
+    "id": 5,
+    "name": "Barbell Squat",
+    "slug": "barbell-squat",
+    "instructions": "Barbell on trapezius muscles. Squat keeping your back straight and knees out until thighs are parallel."
+  },
+  {
+    "id": 6,
+    "name": "Barbell Bench Press",
+    "slug": "barbell-bench-press",
+    "instructions": "Lying on the bench, hold the bar at shoulder width. Lower it to your chest and push."
+  },
+  {
+    "id": 7,
+    "name": "Romanian Deadlift",
+    "slug": "romanian-deadlift",
+    "instructions": "Legs almost straight. Lower the bar close to the thigh, pushing the hip back until you feel the stretch."
+  },
+  {
+    "id": 8,
+    "name": "Barbell Row",
+    "slug": "barbell-row",
+    "instructions": "Lean your torso forward ~45°. Pull the bar towards your navel, contracting your back."
+  },
+  {
+    "id": 9,
+    "name": "Dumbbell Overhead Press",
+    "slug": "dumbbell-overhead-press",
+    "instructions": "Press dumbbells overhead from shoulder height. Lock out at the top, control on the way down."
+  },
+  {
+    "id": 10,
+    "name": "Deadlift",
+    "slug": "deadlift",
+    "instructions": "Hip hinge, neutral spine. Drive through the floor and lock hips at the top."
+  },
+  {
+    "id": 11,
+    "name": "Pull-Up",
+    "slug": "pull-up",
+    "instructions": "Full ROM, chest to bar. Engage lats from the bottom."
+  },
+  {
+    "id": 12,
+    "name": "Dips",
+    "slug": "dips",
+    "instructions": "Lean forward for chest focus. Full depth, control the descent."
+  },
+  {
+    "id": 13,
+    "name": "Cable Fly",
+    "slug": "cable-fly",
+    "instructions": "Wide arc, squeeze at centre of movement."
+  },
+  {
+    "id": 14,
+    "name": "Lateral Raise",
+    "slug": "lateral-raise",
+    "instructions": "Slight forward lean, lead with elbow. Control the eccentric."
+  },
+  {
+    "id": 15,
+    "name": "Barbell Curl",
+    "slug": "barbell-curl",
+    "instructions": "Strict form, no swing. Full range of motion."
+  },
+  {
+    "id": 16,
+    "name": "Tricep Pushdown",
+    "slug": "tricep-pushdown",
+    "instructions": "Lock out at bottom, control on the way up."
+  },
+  {
+    "id": 17,
+    "name": "Leg Curl",
+    "slug": "leg-curl",
+    "instructions": "Slow eccentric, full stretch at bottom."
+  },
+  {
+    "id": 18,
+    "name": "Calf Raise",
+    "slug": "calf-raise",
+    "instructions": "Full ROM, pause and stretch at the bottom."
+  },
+  {
+    "id": 19,
+    "name": "Steady-State Run",
+    "slug": "steady-state-run",
+    "instructions": "65-75% max HR. Maintain a conversational pace."
+  },
+  {
+    "id": 20,
+    "name": "HIIT Sprints",
+    "slug": "hiit-sprints",
+    "instructions": "Max effort sprints. 30s all-out, 60s active recovery."
+  },
+  {
+    "id": 21,
+    "name": "Jump Rope",
+    "slug": "jump-rope",
+    "instructions": "Maintain a steady rhythm. Great for coordination and warm-up."
+  }
+]

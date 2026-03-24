@@ -5,17 +5,37 @@ import {
   getWeightLog, addWeightEntry,
   getTodayCheckedIn, addCheckIn,
   getPhotos, savePhoto, deletePhoto,
+  StorageError,
 } from './storage';
+import { normalizeLocale } from './i18n-utils.js';
+import { tFor } from './locale-messages.js';
 
 function todayYmd() {
   return new Date().toISOString().split('T')[0];
 }
 
-function notifyMutationError(err, fallbackMessage) {
-  const description = err instanceof Error && err.message ? err.message : fallbackMessage;
+/** Map stable storage / mutation errors to locale keys (never show raw English to users). */
+const ERROR_MESSAGE_TO_KEY = {
+  [StorageError.PROFILE]: 'errors.profileStorage',
+  [StorageError.WEIGHT_LOG]: 'errors.weight',
+  [StorageError.PHOTO_SAVE]: 'errors.photoSave',
+  [StorageError.PHOTO_DELETE]: 'errors.photoDelete',
+};
+
+/** @param {unknown} err @param {string} descriptionKey dot path in locales, e.g. errors.checkIn */
+function notifyMutationError(err, descriptionKey) {
+  const locale = normalizeLocale(getProfile()?.locale);
+  const title = String(tFor(locale, 'errors.genericTitle'));
+  const keyFromErr =
+    err instanceof Error && err.message && ERROR_MESSAGE_TO_KEY[err.message]
+      ? ERROR_MESSAGE_TO_KEY[err.message]
+      : null;
+  const description = String(
+    tFor(locale, keyFromErr || descriptionKey || 'errors.unknown'),
+  );
   toast({
     variant: 'destructive',
-    title: 'Something went wrong',
+    title,
     description,
   });
 }
@@ -54,7 +74,7 @@ export const useCheckIn = () => {
     },
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.checkedIn, ctx?.prev);
-      notifyMutationError(err, 'Could not save check-in. Please try again.');
+      notifyMutationError(err, 'errors.checkIn');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.checkedIn }),
   });
@@ -79,7 +99,7 @@ export const useAddWeight = () => {
     },
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.weightLog, ctx?.prev);
-      notifyMutationError(err, 'Could not save weight. Please try again.');
+      notifyMutationError(err, 'errors.weight');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
   });
@@ -89,8 +109,7 @@ export const useSaveProfile = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data) => {
-      const ok = saveProfile(data);
-      if (!ok) throw new Error('Unable to save profile to device storage.');
+      saveProfile(data);
       return data;
     },
     onMutate: async (data) => {
@@ -101,7 +120,7 @@ export const useSaveProfile = () => {
     },
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.profile, ctx?.prev);
-      notifyMutationError(err, 'Could not save profile. Please try again.');
+      notifyMutationError(err, 'errors.profileSave');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.profile }),
   });
@@ -124,7 +143,7 @@ export const useSavePhoto = () => {
     },
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.photos, ctx?.prev);
-      notifyMutationError(err, 'Could not save photo. Storage may be full.');
+      notifyMutationError(err, 'errors.photoSave');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
   });
@@ -144,7 +163,7 @@ export const useDeletePhoto = () => {
     },
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.photos, ctx?.prev);
-      notifyMutationError(err, 'Could not delete photo. Please try again.');
+      notifyMutationError(err, 'errors.photoDelete');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.photos }),
   });

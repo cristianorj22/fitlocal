@@ -3,6 +3,14 @@ import { idbGet, idbSet, idbDelete, idbClear } from './persistence/indexedDb';
 const PREFIX = 'fitlocal_';
 const MAX_PHOTOS = 30;
 
+/** Stable codes for i18n mapping in queries (avoid leaking English to users). */
+export const StorageError = {
+  PROFILE: 'fitlocal:storage:profile',
+  WEIGHT_LOG: 'fitlocal:storage:weight_log',
+  PHOTO_SAVE: 'fitlocal:storage:photo_save',
+  PHOTO_DELETE: 'fitlocal:storage:photo_delete',
+};
+
 let migrationPromise = null;
 
 export const storage = {
@@ -62,7 +70,9 @@ export function getProfile() {
 }
 
 export function saveProfile(data) {
-  return storage.set('profile', data);
+  const ok = storage.set('profile', data);
+  if (!ok) throw new Error(StorageError.PROFILE);
+  return true;
 }
 
 export async function getWeightLog() {
@@ -74,7 +84,7 @@ export async function addWeightEntry(kg) {
   const log = await getWeightLog();
   log.push({ date: new Date().toISOString().split('T')[0], kg });
   const ok = await idbSet('weight_log', log);
-  if (!ok) throw new Error('Unable to save weight log');
+  if (!ok) throw new Error(StorageError.WEIGHT_LOG);
 }
 
 export function getCheckIns() {
@@ -112,7 +122,7 @@ export async function savePhoto(dataUrl, note = '') {
   }
 
   if (!ok) {
-    throw new Error('Unable to save photo');
+    throw new Error(StorageError.PHOTO_SAVE);
   }
 }
 
@@ -120,7 +130,7 @@ export async function deletePhoto(index) {
   const photos = await getPhotos();
   photos.splice(index, 1);
   const ok = await idbSet('photos', photos);
-  if (!ok) throw new Error('Unable to delete photo');
+  if (!ok) throw new Error(StorageError.PHOTO_DELETE);
 }
 
 export async function clearAppData() {

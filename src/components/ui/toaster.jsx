@@ -7,9 +7,11 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast";
+import { useI18n } from "@/contexts/LocaleContext.jsx";
 
 export function Toaster() {
   const { toasts } = useToast();
+  const { t } = useI18n();
 
   return (
     <ToastProvider>
@@ -23,11 +25,11 @@ export function Toaster() {
               )}
             </div>
             {action}
-            <ToastClose />
+            <ToastClose aria-label={t("ui.dismissToast")} />
           </Toast>
         );
       })}
-      <ToastViewport />
+      <ToastViewport aria-label={t("ui.toastRegion")} />
     </ToastProvider>
   );
 } 

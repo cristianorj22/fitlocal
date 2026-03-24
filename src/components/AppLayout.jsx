@@ -2,13 +2,7 @@ import { createContext, useContext, useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Dumbbell, TrendingUp, User, ChevronLeft } from 'lucide-react';
-
-const NAV = [
-  { to: '/', icon: LayoutDashboard, label: 'Home' },
-  { to: '/workout', icon: Dumbbell, label: 'Workout' },
-  { to: '/progress', icon: TrendingUp, label: 'Progress' },
-  { to: '/profile', icon: User, label: 'Profile' },
-];
+import { useI18n } from '../contexts/LocaleContext.jsx';
 
 const ROOT_TABS = ['/', '/workout', '/progress', '/profile'];
 
@@ -32,6 +26,14 @@ export const useAppNav = () => useContext(NavContext);
 export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
+
+  const NAV = [
+    { to: '/', icon: LayoutDashboard, label: t('nav.home') },
+    { to: '/workout', icon: Dumbbell, label: t('nav.workout') },
+    { to: '/progress', icon: TrendingUp, label: t('nav.progress') },
+    { to: '/profile', icon: User, label: t('nav.profile') },
+  ];
 
   // Source-of-truth navigation stacks, one per tab.
   // Initialised deep-link-safe: arriving at /workout/x pre-populates ['/workout', '/workout/x']
@@ -86,7 +88,7 @@ export default function AppLayout() {
             className="flex items-center gap-1 text-emerald-400 text-sm font-medium min-w-[44px] min-h-[44px] px-3"
           >
             <ChevronLeft className="w-5 h-5" />
-            Back
+            {t('nav.back')}
           </button>
         </div>
       )}
