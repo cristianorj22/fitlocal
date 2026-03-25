@@ -92,9 +92,6 @@ export default function Workout() {
     }
   };
 
-  const completedCount = Object.values(completed).filter(Boolean).length;
-  const total = dayData?.exercises?.length || 0;
-
   const handleRefresh = () => new Promise((res) => setTimeout(res, 600));
 
   return (
