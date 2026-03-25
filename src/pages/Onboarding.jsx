@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { hapticSuccess } from '../lib/haptics';
+import { audioSuccess } from '../lib/audio';
 import { calcBMI, calcBMR, calcTDEE, calcMacros } from '../lib/fitness';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react';
@@ -67,6 +69,8 @@ export default function Onboarding() {
     const bmr = calcBMR(w, h, a, form.gender);
     const tdee = calcTDEE(bmr, form.activityLevel);
     const macros = calcMacros(tdee, form.goal, w);
+    hapticSuccess();
+    audioSuccess();
     saveProfileMut.mutate(
       { ...form, bmi, bmr, tdee, macros, locale: form.locale || 'en', createdAt: Date.now() },
       { onSuccess: () => navigate('/') },

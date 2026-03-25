@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { hapticMedium, hapticSuccess } from '../lib/haptics';
+import { audioComplete, audioSuccess } from '../lib/audio';
 import { getWorkoutPlan, restTimeByGoal } from '../lib/exercises';
 import { getExerciseMedia } from '../lib/exerciseMedia';
 import PullToRefresh from '../components/PullToRefresh';
@@ -69,6 +71,8 @@ export default function Workout() {
       if (next) {
         const r = ex.rest != null ? ex.rest : restDefault;
         setRestTimerSeconds(r);
+        hapticMedium();
+        audioComplete();
       }
       return { ...c, [ex.name]: next };
     });

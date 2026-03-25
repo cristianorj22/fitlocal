@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { hapticLight, hapticSuccess } from '../lib/haptics';
+import { audioTick, audioSuccess } from '../lib/audio';
 import { bmiCategory } from '../lib/fitness';
 import WeightChart from '../components/WeightChart';
 import { CheckCircle, Plus, Beef, Wheat, Droplets } from 'lucide-react';
@@ -36,6 +38,8 @@ export default function Dashboard() {
 
   const handleAddWeight = () => {
     if (!newWeight) return;
+    hapticLight();
+    audioTick();
     addWeight.mutate(parseFloat(newWeight));
     setNewWeight('');
     setShowAddWeight(false);

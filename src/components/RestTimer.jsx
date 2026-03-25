@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { hapticTimerEnd } from '../lib/haptics';
+import { audioTimerEnd } from '../lib/audio';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 
@@ -19,16 +21,8 @@ export default function RestTimer({ defaultSeconds = 90 }) {
   }, [defaultSeconds]);
 
   const playBeep = () => {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.5);
+    audioTimerEnd();
+    hapticTimerEnd();
   };
 
   useEffect(() => {
