@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { registerServiceWorker } from '@/lib/registerSW'
-import { getNotifPrefs, getProfile, scheduleWorkoutReminders } from '@/lib/notifications'
+import { getNotifPrefs, scheduleWorkoutReminders } from '@/lib/notifications'
 import { ThemeProvider } from 'next-themes'
 import App from '@/App.jsx'
 import '@/index.css'
