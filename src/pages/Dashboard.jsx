@@ -8,6 +8,7 @@ import InfoTooltip from '../components/InfoTooltip';
 import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
 import { useProfile, useWeightLog, useCheckedIn, useCheckIn, useAddWeight } from '../lib/queries';
+import StreakBadge from '../components/StreakBadge';
 import { useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
@@ -70,6 +71,8 @@ export default function Dashboard() {
           <p className="text-muted-foreground text-sm">{today}</p>
           <h1 className="text-2xl font-bold mt-1">{t('dashboard.hey', { name })} 👋</h1>
         </div>
+
+        <StreakBadge />
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}

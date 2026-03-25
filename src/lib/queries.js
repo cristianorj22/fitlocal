@@ -9,6 +9,7 @@ import {
 } from './storage';
 import { normalizeLocale } from './i18n-utils.js';
 import { tFor } from './locale-messages.js';
+import { syncWidgetData } from './capacitor/bridge';
 
 function todayYmd() {
   return new Date().toISOString().split('T')[0];
@@ -76,6 +77,11 @@ export const useCheckIn = () => {
       qc.setQueryData(KEYS.checkedIn, ctx?.prev);
       notifyMutationError(err, 'errors.checkIn');
     },
+    onSuccess: () => {
+      // Sync widget data after check-in (streak updated)
+      const profile = getProfile();
+      if (profile) getWeightLog().then((wl) => syncWidgetData(profile, wl)).catch(() => {});
+    },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.checkedIn }),
   });
 };
@@ -101,6 +107,11 @@ export const useAddWeight = () => {
       qc.setQueryData(KEYS.weightLog, ctx?.prev);
       notifyMutationError(err, 'errors.weight');
     },
+    onSuccess: (newLog) => {
+      // Sync widget data after weight entry
+      const profile = getProfile();
+      if (profile) syncWidgetData(profile, newLog).catch(() => {});
+    },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
   });
 };
@@ -121,6 +132,10 @@ export const useSaveProfile = () => {
     onError: (err, _vars, ctx) => {
       qc.setQueryData(KEYS.profile, ctx?.prev);
       notifyMutationError(err, 'errors.profileSave');
+    },
+    onSuccess: (data) => {
+      // Sync widget data after profile save
+      getWeightLog().then((wl) => syncWidgetData(data, wl)).catch(() => {});
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.profile }),
   });

@@ -9,6 +9,11 @@ import {
   clearWorkoutReminders,
   sendTestNotification,
 } from '../lib/notifications';
+import {
+  isNativeNotifAvailable,
+  scheduleNativeReminders,
+  cancelNativeReminders,
+} from '../lib/capacitor/localNotifications';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 
 const TIME_OPTIONS = [
@@ -33,12 +38,21 @@ export default function NotificationSettings({ profile }) {
     if (prefs.time) setTime(prefs.time);
   }, []);
 
-  // Re-schedule whenever prefs change
+  // Re-schedule whenever prefs change — native takes priority over web timers
   useEffect(() => {
     if (enabled && permission === 'granted' && profile?.days?.length) {
-      scheduleWorkoutReminders(profile.days, time, profile.name?.split(' ')[0] || '', locale);
+      const firstName = profile.name?.split(' ')[0] || '';
+      // Try native first, fall back to web
+      isNativeNotifAvailable().then((native) => {
+        if (native) {
+          scheduleNativeReminders(profile.days, time, firstName, locale);
+        } else {
+          scheduleWorkoutReminders(profile.days, time, firstName, locale);
+        }
+      });
     } else {
       clearWorkoutReminders();
+      cancelNativeReminders().catch(() => {});
     }
   }, [enabled, time, permission, profile?.days, locale]);
 

@@ -10,6 +10,7 @@ import { AppInput } from '../components/AppInput';
 import { clearAppData } from '../lib/storage';
 import HealthDisclaimer from '../components/HealthDisclaimer';
 import NotificationSettings from '../components/NotificationSettings';
+import WidgetPreview from '../components/WidgetPreview';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 import { normalizeLocale } from '../lib/i18n-utils.js';
 import { toast } from '@/components/ui/use-toast';
@@ -320,6 +321,8 @@ export default function Profile() {
       </div>
 
       <NotificationSettings profile={profile} />
+
+      <WidgetPreview />
 
       <button
         type="button"
