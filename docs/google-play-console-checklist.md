@@ -1,40 +1,67 @@
-# Google Play Console checklist (FitLocal)
+# Google Play Console Checklist (FitLocal)
 
-Use this list with the [Google Play Developer Policy Center](https://play.google/developer-content-policy/) and your Play Console release.
+Use esta lista junto com o [Google Play Developer Policy Center](https://play.google/developer-content-policy/).
 
-## App content and store listing
+## 1) Conta, app e configuracao basica
 
-- [ ] Short and full descriptions match what the app actually does (no misleading health or privacy claims).
-- [ ] Screenshots and icon reflect the current UI.
-- [ ] **Privacy policy URL** — use the same public URL as in the app (for example `https://your-domain.com/privacy` or the path deployed with this repo).
+- [ ] App criada no Play Console com package ID final.
+- [ ] Categoria correta (Health & Fitness).
+- [ ] Email de suporte e website configurados.
+- [ ] Politica de privacidade publicada e acessivel.
 
-## Data safety
+## 2) Store listing (obrigatorio)
 
-- [ ] Complete the **Data safety** form to match the live app:
-  - Types of data: profile fields, weight/log, check-ins, photos (and optional notes).
-  - **Collection / sharing**: if the web build is **only local** (localStorage + IndexedDB), state that data stays on device until the user deletes it. If Base44 or another SDK syncs data in your shipped build, declare that accurately.
-  - **Deletion**: describe **Delete All Data** in Profile (clears app-scoped local storage and app IndexedDB).
-- [ ] Align wording with [PrivacyPolicy page](../src/pages/PrivacyPolicy.jsx).
+- [ ] App name final.
+- [ ] Short description e full description sem claims medicos.
+- [ ] Icone 512x512.
+- [ ] Feature graphic 1024x500.
+- [ ] Pelo menos 2-4 screenshots reais da versao atual.
+- [ ] Capturas em idioma principal (pt-BR) e opcionalmente en-US.
 
-## Health and fitness
+## 3) Data safety (obrigatorio)
 
-- [ ] In-app disclaimer is present (onboarding + profile + policy) — estimates only, not a medical device, consult a professional.
-- [ ] Avoid claiming diagnosis, treatment, or clinical accuracy beyond educational estimates.
+- [ ] Declarar dados processados conforme comportamento real:
+  - perfil (nome, peso, idade, altura, objetivo),
+  - check-ins,
+  - historico de peso,
+  - fotos de progresso e notas.
+- [ ] Se o build distribuido ficar estritamente local (localStorage + IndexedDB), marcar corretamente que os dados ficam no dispositivo.
+- [ ] Se houver sincronizacao/telemetria no build final, declarar coleta e compartilhamento com precisao.
+- [ ] Explicar exclusao de dados via acao "Delete All Data" no Perfil.
+- [ ] Alinhar texto com [`src/pages/PrivacyPolicy.jsx`](../src/pages/PrivacyPolicy.jsx).
 
-## Permissions
+## 4) Saude e compliance de conteudo
 
-- [ ] Declare only what the shipped WebView/binary uses (for example camera or storage for progress photos via file picker). Request permissions in context of user action (“Add Photo”), not at launch without reason.
-- [ ] Justify each permission in Play Console if prompted.
+- [ ] Manter disclaimer de saude visivel (onboarding, perfil e politica).
+- [ ] Nao prometer diagnostico, tratamento ou resultado clinico.
+- [ ] Evitar linguagem de "cura", "medical grade", "comprovado clinicamente" sem base regulatoria.
 
-## Technical (binary / Target API)
+## 5) Permissoes e comportamento
 
-- [ ] Confirm **target API level** and other Play requirements with the tool that produces your AAB/APK (for example Base44 build pipeline). This repo alone does not define `targetSdkVersion`.
+- [ ] Solicitar permissao de camera/galeria apenas em contexto de uso (ex.: adicionar foto).
+- [ ] Validar se nao ha permissao desnecessaria no binario.
+- [ ] Justificar permissoes no Console, quando solicitado.
 
-## SDKs and third parties
+## 6) Build e requisitos tecnicos
 
-- [ ] List third-party SDKs from `package.json` and any native SDKs in the wrapper; ensure Data safety and policy pages reflect what each SDK collects or transmits.
+- [ ] AAB gerado no pipeline final (Base44/wrapper).
+- [ ] Target API level em conformidade com o requisito vigente do Google Play.
+- [ ] Sem crashes em fluxo principal (onboarding, treino, progresso, perfil, exclusao de dados).
 
-## After upload
+## 7) Testes pre-release (minimo)
 
-- [ ] Run internal testing on a physical Android device: onboarding, activity picker, weight log, photo add/delete, delete all data.
-- [ ] Re-run Base44 **Google Play** scan if applicable.
+- [ ] Internal testing com 3-5 dispositivos Android reais.
+- [ ] Smoke test rapido:
+  - [ ] onboarding completo,
+  - [ ] trocar idioma,
+  - [ ] logar peso,
+  - [ ] adicionar/remover foto,
+  - [ ] executar treino e timer,
+  - [ ] delete all data.
+- [ ] Revalidar lint/build (`npm run lint`, `npm run build`).
+
+## 8) Lancamento
+
+- [ ] Publicar primeiro em staged rollout (ex.: 10%).
+- [ ] Monitorar ANR/crash e reviews por 72h.
+- [ ] Subir para 100% apenas sem regressao critica.

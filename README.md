@@ -1,41 +1,86 @@
-**Welcome to your Base44 project** 
+# FitLocal
 
-**About**
+Aplicativo de fitness com foco em privacidade e uso local no dispositivo.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## O que o app faz hoje
 
-This project contains everything you need to run your app locally.
+- Onboarding e perfil com preferencias (idioma, genero, etc.).
+- Dashboard com check-in, macros e progresso de meta.
+- Treinos por dia com timer de descanso, ilustracoes e feedback de uso.
+- Historico de peso e fotos de progresso.
+- i18n em `en` e `pt-BR`.
+- Pagina publica de privacidade em `/privacy`.
 
-**Edit the code in your local development environment**
+## Arquitetura resumida
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+- Frontend: React + Vite + React Router.
+- Estado e cache: TanStack Query.
+- Persistencia local:
+  - `localStorage` para perfil e flags leves (`fitlocal_*`).
+  - `IndexedDB` para dados pesados (`weight_log`, `photos`).
+- Tema/UI: Tailwind + componentes utilitarios.
 
-**Prerequisites:** 
+## Offline e armazenamento
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+- O app e local-first: os dados principais ficam no navegador/dispositivo.
+- O codigo atual usa `localStorage` + `IndexedDB`.
+- Para experiencia offline total em primeira abertura sem rede, verifique se o pipeline de publicacao adiciona Service Worker.
 
+## Requisitos
+
+- Node.js 18+ (recomendado).
+- npm.
+
+## Configuracao local
+
+1. Instale dependencias:
+
+```bash
+npm install
 ```
+
+2. Crie `.env.local`:
+
+```bash
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=your_backend_url
 VITE_SUPPORT_EMAIL=your_support_email
 VITE_PRIVACY_POLICY_URL=https://your-domain.com/privacy
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
 ```
 
-Run the app: `npm run dev`
+## Scripts
 
-**Publish your changes**
+- `npm run dev`: ambiente de desenvolvimento.
+- `npm run build`: build de producao.
+- `npm run preview`: preview local da build.
+- `npm run lint`: lint.
+- `npm run typecheck`: checagem de tipos.
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## Fluxo recomendado antes de release
 
-**Docs & Support**
+1. `npm run lint`
+2. `npm run build`
+3. Smoke test em dispositivo fisico (Android e iPhone)
+4. Revisar checklist Play e Apple
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+## Publicacao
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+- Alteracoes no repositorio podem refletir no Base44 Builder (conforme configuracao do projeto).
+- Para publicar em lojas, siga os checklists em `docs/`.
+
+## Documentacao de release
+
+- [Google Play checklist](docs/google-play-console-checklist.md)
+- [Apple readiness checklist](docs/apple-readiness-checklist.md)
+- [App review notes template](docs/app-review-notes-template.md)
+- [Roadmap de lancamento](docs/launch-roadmap.md)
+
+## Limitacoes e notas
+
+- Widgets nativos (Android/iOS) exigem camada nativa e nao sao apenas configuracao web.
+- Push remoto e notificacoes avancadas dependem de infraestrutura adequada (service worker + backend, ou plugins nativos no wrapper).
+
+## Suporte
+
+- Base44 docs: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+- Base44 support: [https://app.base44.com/support](https://app.base44.com/support)

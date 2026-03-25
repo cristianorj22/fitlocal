@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitLocal | Fitness privado no seu dispositivo</title>
+    <meta
+      name="description"
+      content="FitLocal: seu app de fitness privado, local-first e sem complicacao. Treinos, progresso e privacidade em primeiro lugar."
+    />
+    <style>
+      :root {
+        --bg: #06080f;
+        --bg-2: #0b1020;
+        --text: #e8ecff;
+        --muted: #9aa3c7;
+        --card: rgba(16, 22, 40, 0.75);
+        --line: rgba(125, 211, 252, 0.35);
+        --accent: #22d3ee;
+        --accent-2: #8b5cf6;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background:
+          radial-gradient(1200px 600px at 10% -20%, rgba(34, 211, 238, 0.18), transparent 50%),
+          radial-gradient(1000px 500px at 90% -10%, rgba(139, 92, 246, 0.18), transparent 55%),
+          linear-gradient(180deg, var(--bg), var(--bg-2));
+        min-height: 100vh;
+      }
+
+      .container { width: min(1080px, 92vw); margin: 0 auto; }
+      .hero { padding: 72px 0 36px; text-align: center; }
+      .pill {
+        display: inline-block;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #c9f5ff;
+        background: rgba(34, 211, 238, 0.08);
+        font-size: 13px;
+      }
+      h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(34px, 6vw, 56px);
+        line-height: 1.06;
+      }
+      .subtitle {
+        margin: 0 auto;
+        max-width: 740px;
+        color: var(--muted);
+        font-size: clamp(16px, 2.1vw, 20px);
+      }
+
+      .cta {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: #001018;
+      }
+      .btn-secondary {
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+      .card {
+        position: relative;
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 18px;
+        backdrop-filter: blur(4px);
+        overflow: hidden;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: 18px;
+        background:
+          linear-gradient(120deg, transparent 20%, rgba(34, 211, 238, 0.45), transparent 45%),
+          linear-gradient(300deg, transparent 40%, rgba(139, 92, 246, 0.45), transparent 70%);
+        filter: blur(8px);
+        opacity: 0.8;
+        pointer-events: none;
+      }
+      .card h3 { margin: 0 0 8px; font-size: 16px; }
+      .card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+      footer {
+        margin-top: 32px;
+        padding: 24px 0 40px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      footer a { color: #c9f5ff; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <section class="hero">
+        <span class="pill">FitLocal • Private Fitness</span>
+        <h1>Seu fitness privado.<br />No seu dispositivo.</h1>
+        <p class="subtitle">
+          Treino, progresso e acompanhamento com foco em simplicidade.
+          Sem complicacao, sem friccao e com privacidade em primeiro lugar.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="/">Abrir app</a>
+          <a class="btn btn-secondary" href="/privacy">Politica de privacidade</a>
+          <a class="btn btn-secondary" href="/terms.html">Termos de uso</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h3>Plano de treino inteligente</h3>
+          <p>Rotina organizada por dias, com timer de descanso e foco no que importa.</p>
+        </article>
+        <article class="card">
+          <h3>Progresso claro</h3>
+          <p>Historico de peso e fotos para visualizar evolucao real sem complexidade.</p>
+        </article>
+        <article class="card">
+          <h3>Local-first</h3>
+          <p>Dados armazenados no proprio dispositivo, com controle total do usuario.</p>
+        </article>
+        <article class="card">
+          <h3>Pronto para lancamento</h3>
+          <p>Fluxo enxuto, rapido e desenhado para uso diario sem sobrecarga.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <div>© FitLocal</div>
+      <div><a href="/privacy">Privacidade</a> • <a href="/terms.html">Termos</a></div>
+    </footer>
+  </body>
+</html>

@@ -1,35 +1,44 @@
 # App Review Notes Template (App Store Connect)
 
-## Test Account / Access
+Copie e ajuste este modelo no campo App Review Notes.
 
-- App does not require account login.
-- Full functionality is available after onboarding.
+## Access
 
-## Core Flows to Validate
+- Este app nao exige login.
+- Todas as funcoes principais ficam disponiveis apos o onboarding inicial.
 
-1. Complete onboarding and start app.
-2. Navigate through tabs: Home, Workout, Progress, Profile.
-3. Add weight entry in Home.
-4. Add and view progress photos in Progress.
-5. Open Profile and use "Delete All Data" to clear app data.
+## Core user flows for review
 
-## Data Persistence Behavior
+1. Completar onboarding.
+2. Navegar pelas abas: Home, Workout, Progress, Profile.
+3. Registrar peso na Home.
+4. Adicionar e remover foto de progresso em Progress.
+5. Abrir Workout e usar o timer de descanso.
+6. Alterar idioma em Profile > Preferences.
+7. Executar "Delete All Data" em Profile.
 
-- App stores profile/basic flags in localStorage under `fitlocal_*`.
-- Heavy entities (`weight_log`, `photos`) are stored in IndexedDB for reliability and capacity.
-- Legacy data migration from localStorage to IndexedDB runs once after update.
+## Data storage behavior
 
-## Performance / UX Notes
+- Dados de perfil e flags leves: `localStorage` com prefixo `fitlocal_*`.
+- Dados volumosos:
+  - `weight_log` em IndexedDB
+  - `photos` em IndexedDB
+- Ha migracao unica de dados legados no primeiro acesso apos update.
 
-- Route-level lazy loading is enabled to reduce initial bundle cost.
-- Suspense fallback is shown during route chunk loading.
+## Privacy and deletion
 
-## Privacy Notes
+- O app funciona de forma local-first.
+- O usuario pode apagar os dados no proprio app:
+  - Profile > Delete All Data.
+- URL publica da politica de privacidade:
+  - `/privacy` ou valor configurado em `VITE_PRIVACY_POLICY_URL`.
 
-- Data is stored locally on device/browser for app functionality.
-- "Delete All Data" clears app-scoped persisted data.
-- Public privacy URL is served by the app at `/privacy` (or custom `VITE_PRIVACY_POLICY_URL`).
+## Health disclaimer
 
-## Additional Notes
+- O app fornece estimativas educacionais de fitness.
+- Nao e dispositivo medico e nao fornece diagnostico/tratamento.
 
-- If review environment blocks storage, app degrades gracefully with guarded storage operations.
+## Notes for reviewer
+
+- Se o ambiente de review restringir storage/browser APIs, o app tenta degradar de forma segura.
+- Caso precisem de walkthrough guiado, contactar: `VITE_SUPPORT_EMAIL`.

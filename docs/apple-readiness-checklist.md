@@ -1,47 +1,61 @@
 # Apple Readiness Checklist (FitLocal)
 
-## Scope
+Checklist pratico para App Store Connect e App Review.
 
-This checklist maps key implementation updates to Apple App Review Guidelines relevant to this project.
+## 1) App Information
 
-## Guideline 2.1 / 2.4.2 (Performance and app completeness)
+- [ ] Bundle ID final definido.
+- [ ] Nome da app e subtitle finalizados.
+- [ ] Categoria correta (Health & Fitness).
+- [ ] URL de suporte e URL de politica de privacidade preenchidas.
 
-- [x] Route-level code-splitting with `React.lazy` and `Suspense` in `src/App.jsx`.
-- [x] Loading fallback implemented in `src/components/AppShellFallback.jsx`.
-- [x] Production build validated successfully (`npm run build`).
+## 2) App Privacy (nutrition labels)
 
-## Guideline 4 (Design and usability)
+- [ ] Declarar tipos de dados coerentes com o build final.
+- [ ] Se dados permanecerem locais, refletir isso nas respostas.
+- [ ] Se houver qualquer sincronizacao/analytics no build real, declarar com precisao.
+- [ ] Alinhar com [`src/pages/PrivacyPolicy.jsx`](../src/pages/PrivacyPolicy.jsx).
 
-- [x] Theme tokens applied to core screens (`bg-background`, `text-foreground`, `text-muted-foreground`, `border-border`).
-- [x] Low-contrast gray combinations reduced on critical user paths:
-  - `src/components/AppLayout.jsx`
-  - `src/pages/Onboarding.jsx`
-  - `src/pages/Dashboard.jsx`
-  - `src/pages/Workout.jsx`
-  - `src/pages/Progress.jsx`
-  - `src/pages/Profile.jsx`
-  - `src/components/WeightChart.jsx`
-- [x] Theme provider configured globally in `src/main.jsx`.
+## 3) Conteudo de saude
 
-## Guideline 5.1 (Privacy and data handling)
+- [ ] Disclaimer de saude visivel no app.
+- [ ] Sem claims medicos de diagnostico/tratamento.
+- [ ] Sem promessas clinicas sem base.
 
-- [x] Local persistence hardened with error handling in:
-  - `src/lib/storage.js`
-  - `src/lib/app-params.js`
-- [x] Heavy entities migrated to IndexedDB:
-  - `weight_log`
-  - `photos`
-- [x] One-time migration from legacy localStorage to IndexedDB implemented in `src/lib/storage.js`.
-- [x] Global `localStorage.clear()` removed and replaced by app-scoped cleanup (`clearAppData`).
+## 4) Assets de App Store (obrigatorio)
 
-## Guideline 2.3 (Review metadata readiness)
+- [ ] Icone app 1024x1024 (sem alpha).
+- [ ] Screenshots iPhone 6.7" (obrigatorio para a maioria dos casos).
+- [ ] Screenshots iPhone 6.1" (fortemente recomendado).
+- [ ] Texto promocional e descricao alinhados ao app atual.
 
-- [x] App Review Notes template prepared in `docs/app-review-notes-template.md`.
-- [x] Validation summary prepared in `docs/base44-validation-report.md`.
+## 5) Testes e qualidade
 
-## Validation Status
+- [ ] Build de release validada.
+- [ ] Smoke test em iPhone fisico:
+  - [ ] onboarding,
+  - [ ] navegacao tabs,
+  - [ ] trocar idioma,
+  - [ ] treino + timer,
+  - [ ] fotos e peso,
+  - [ ] delete all data.
+- [ ] Sem crash nos fluxos criticos.
+
+## 6) App Review Notes
+
+- [ ] Notas preenchidas com fluxo de validacao.
+- [ ] Explicar que nao exige conta para usar.
+- [ ] Incluir caminho da funcionalidade de exclusao de dados.
+- [ ] Referenciar links de suporte/politica.
+
+## 7) Lancamento seguro
+
+- [ ] Publicar primeiro em release controlada (quando possivel).
+- [ ] Monitorar crash e reviews nas primeiras 72h.
+- [ ] Ter plano de hotfix rapido.
+
+## Validacao tecnica local
 
 - [x] `npm run lint`
 - [x] `npm run build`
-- [ ] Re-run Base44 scanner and attach updated output
-- [ ] Manual mobile smoke test on target devices
+- [ ] Teste manual completo em dispositivo iOS real
