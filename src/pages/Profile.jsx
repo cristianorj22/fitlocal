@@ -9,6 +9,7 @@ import { useProfile, useSaveProfile } from '../lib/queries';
 import { AppInput } from '../components/AppInput';
 import { clearAppData } from '../lib/storage';
 import HealthDisclaimer from '../components/HealthDisclaimer';
+import NotificationSettings from '../components/NotificationSettings';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 import { normalizeLocale } from '../lib/i18n-utils.js';
 import { toast } from '@/components/ui/use-toast';
@@ -317,6 +318,8 @@ export default function Profile() {
           </div>
         )}
       </div>
+
+      <NotificationSettings profile={profile} />
 
       <button
         type="button"
