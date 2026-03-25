@@ -1,8 +1,16 @@
 /**
  * Audio feedback utility — Web Audio API synth tones.
  * All functions are silent no-ops when AudioContext is unavailable.
+ * Respects profile.soundEnabled preference (default: true).
  * Sounds are generated on-the-fly (no external files needed).
  */
+
+import { getProfile } from './storage';
+
+function isEnabled() {
+  const profile = getProfile();
+  return profile?.soundEnabled !== false; // default true
+}
 
 function getCtx() {
   try {
@@ -13,6 +21,7 @@ function getCtx() {
 }
 
 function tone(frequency, durationSec, gainValue = 0.25, type = 'sine') {
+  if (!isEnabled()) return;
   const ctx = getCtx();
   if (!ctx) return;
   const osc = ctx.createOscillator();
