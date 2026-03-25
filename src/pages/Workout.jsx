@@ -57,10 +57,15 @@ export default function Workout() {
   const plan = useMemo(() => (profile ? getWorkoutPlan(profile) : []), [profile]);
   const dayData = plan[selectedDay];
   const restDefault = profile ? restTimeByGoal[profile.goal] || 90 : 90;
+  const total = dayData?.exercises?.length || 0;
+  const completedCount = Object.values(completed).filter(Boolean).length;
 
   useEffect(() => {
-    setRestTimerSeconds(restDefault);
-  }, [selectedDay, restDefault]);
+    if (total > 0 && completedCount === total) {
+      hapticSuccess();
+      audioSuccess();
+    }
+  }, [completedCount, total]);
 
   if (!profile) return null;
 
@@ -256,7 +261,6 @@ export default function Workout() {
 
         <RestTimer defaultSeconds={restTimerSeconds} />
 
-        {completedCount === total && total > 0 && (() => { if (completedCount === total && total > 0) { hapticSuccess(); audioSuccess(); } return null; })()}
         {completedCount === total && total > 0 && (
           <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 text-center">
             <div className="text-3xl mb-2">🎉</div>
