@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import WeightChart from '../components/WeightChart';
-import { Camera, Trash2, X, Share2 } from 'lucide-react';
+import { Camera, Trash2, X, Share2, Download } from 'lucide-react';
+import { exportAllDataCsv } from '../lib/exportCsv';
+import { toast } from '@/components/ui/use-toast';
 import { useProfile, useWeightLog, usePhotos, useSavePhoto, useDeletePhoto } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 
@@ -13,6 +15,15 @@ export default function Progress() {
   const deletePhoto = useDeletePhoto();
   const [selected, setSelected] = useState(null);
   const [sharing, setSharing] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportCsv = async () => {
+    if (!profile) return;
+    setExporting(true);
+    await exportAllDataCsv();
+    toast({ title: t('progress.exportDone') });
+    setExporting(false);
+  };
 
   const handleShare = async () => {
     if (!navigator.share) return;
@@ -70,17 +81,28 @@ export default function Progress() {
     <div className="max-w-lg mx-auto p-5 space-y-6">
       <div className="pt-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('progress.title')}</h1>
-        {typeof navigator !== 'undefined' && navigator.share && (
+        <div className="flex gap-2">
           <button
             type="button"
-            onClick={handleShare}
-            disabled={sharing}
-            aria-label="Share progress"
+            onClick={handleExportCsv}
+            disabled={exporting}
+            aria-label={t('progress.exportCsv')}
             className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-muted border border-border text-muted-foreground disabled:opacity-50"
           >
-            <Share2 className="w-5 h-5" />
+            <Download className="w-5 h-5" />
           </button>
-        )}
+          {typeof navigator !== 'undefined' && navigator.share && (
+            <button
+              type="button"
+              onClick={handleShare}
+              disabled={sharing}
+              aria-label="Share progress"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-muted border border-border text-muted-foreground disabled:opacity-50"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+          )}
+        </div>
       </div>
 
       <WeightChart log={weightLog} targetWeight={profile.targetWeight} />
