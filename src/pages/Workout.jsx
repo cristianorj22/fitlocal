@@ -256,6 +256,7 @@ export default function Workout() {
 
         <RestTimer defaultSeconds={restTimerSeconds} />
 
+        {completedCount === total && total > 0 && (() => { if (completedCount === total && total > 0) { hapticSuccess(); audioSuccess(); } return null; })()}
         {completedCount === total && total > 0 && (
           <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 text-center">
             <div className="text-3xl mb-2">🎉</div>

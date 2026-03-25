@@ -91,7 +91,7 @@ export default function Dashboard() {
             <button
               type="button"
               aria-label={t('dashboard.checkIn')}
-              onClick={() => checkIn.mutate()}
+              onClick={() => { hapticSuccess(); audioSuccess(); checkIn.mutate(); }}
               disabled={checkIn.isPending}
               className="px-4 py-2 bg-emerald-500 rounded-xl text-sm font-semibold disabled:opacity-60"
             >
