@@ -11,6 +11,7 @@ import { clearAppData } from '../lib/storage';
 import HealthDisclaimer from '../components/HealthDisclaimer';
 import NotificationSettings from '../components/NotificationSettings';
 import WidgetPreview from '../components/WidgetPreview';
+import SensoryPreferences from '../components/SensoryPreferences';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 import { normalizeLocale } from '../lib/i18n-utils.js';
 import { toast } from '@/components/ui/use-toast';
@@ -122,6 +123,8 @@ export default function Profile() {
           {profile.name?.[0]?.toUpperCase() || '?'}
         </div>
       </div>
+
+      <SensoryPreferences profile={profile} setProfile={setProfile} />
 
       <div className="bg-card border border-border rounded-2xl p-4 space-y-4">
         <h2 className="text-sm font-medium text-muted-foreground">{t('profile.preferences')}</h2>
@@ -351,6 +354,8 @@ export default function Profile() {
             <p>{t('privacyInline.p2')}</p>
             <p>{t('privacyInline.p3')}</p>
             <p>{t('privacyInline.p4')}</p>
+            <p>{t('privacyInline.p5')}</p>
+            <p>{t('privacyInline.p6')}</p>
           </div>
         </details>
         <div className="text-sm text-muted-foreground">

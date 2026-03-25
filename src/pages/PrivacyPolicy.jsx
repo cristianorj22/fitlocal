@@ -41,6 +41,16 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-2">
+          <h2 className="text-xl font-semibold">{t('privacyPage.notifications')}</h2>
+          <p className="text-muted-foreground">{t('privacyPage.notificationsText')}</p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-xl font-semibold">{t('privacyPage.location')}</h2>
+          <p className="text-muted-foreground">{t('privacyPage.locationText')}</p>
+        </section>
+
+        <section className="space-y-2">
           <h2 className="text-xl font-semibold">{t('privacyPage.deletion')}</h2>
           <p className="text-muted-foreground">
             {t('privacyPage.deletionText')}{' '}
