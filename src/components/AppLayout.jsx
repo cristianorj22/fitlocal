@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Dumbbell, TrendingUp, User, ChevronLeft } from 'lucide-react';
 import { useI18n } from '../contexts/LocaleContext.jsx';
+import InstallBanner from './InstallBanner';
 
 const ROOT_TABS = ['/', '/workout', '/progress', '/profile'];
 
@@ -83,6 +84,8 @@ export default function AppLayout() {
         paddingRight: 'env(safe-area-inset-right)',
       }}
     >
+      <InstallBanner />
+
       {/* Back button header — only on non-root screens */}
       {!isRootTab && (
         <div className="flex items-center px-2 py-1 border-b border-border bg-background/95 backdrop-blur z-40">

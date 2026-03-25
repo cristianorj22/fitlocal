@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import WeightChart from '../components/WeightChart';
-import { Camera, Trash2, X } from 'lucide-react';
+import { Camera, Trash2, X, Share2 } from 'lucide-react';
 import { useProfile, useWeightLog, usePhotos, useSavePhoto, useDeletePhoto } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 
@@ -12,6 +12,17 @@ export default function Progress() {
   const savePhoto = useSavePhoto();
   const deletePhoto = useDeletePhoto();
   const [selected, setSelected] = useState(null);
+  const [sharing, setSharing] = useState(false);
+
+  const handleShare = async () => {
+    if (!navigator.share) return;
+    const current = weightLog[weightLog.length - 1]?.kg || profile.weight;
+    const target = profile.targetWeight;
+    const text = `FitLocal — ${profile.name}\nPeso atual: ${current} kg${target ? ` → Objetivo: ${target} kg` : ''}`;
+    setSharing(true);
+    try { await navigator.share({ title: 'FitLocal Progress', text }); } catch { /* cancelled */ }
+    setSharing(false);
+  };
   const [note, setNote] = useState('');
   const fileRef = useRef();
 
@@ -57,8 +68,19 @@ export default function Progress() {
 
   return (
     <div className="max-w-lg mx-auto p-5 space-y-6">
-      <div className="pt-4">
+      <div className="pt-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('progress.title')}</h1>
+        {typeof navigator !== 'undefined' && navigator.share && (
+          <button
+            type="button"
+            onClick={handleShare}
+            disabled={sharing}
+            aria-label="Share progress"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-muted border border-border text-muted-foreground disabled:opacity-50"
+          >
+            <Share2 className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       <WeightChart log={weightLog} targetWeight={profile.targetWeight} />
