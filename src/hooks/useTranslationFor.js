@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { tFor } from '../lib/locale-messages.js';
 import { normalizeLocale } from '../lib/i18n-utils.js';
 
