@@ -71,14 +71,9 @@ export async function syncWidgetData(profile, weightLog) {
   const payload = buildWidgetPayload(profile, weightLog);
   if (!payload) return;
 
-  // Capacitor Preferences available?
-  try {
-    const { Preferences } = await import('@capacitor/preferences');
-    await Preferences.set({ key: WIDGET_KEY, value: JSON.stringify(payload) });
-    return;
-  } catch {
-    // Capacitor not installed — fallback to localStorage for dev/testing
-  }
+  // When Capacitor is installed, replace this block with:
+  // const { Preferences } = await import('@capacitor/preferences');
+  // await Preferences.set({ key: WIDGET_KEY, value: JSON.stringify(payload) });
 
   // Fallback: localStorage (useful for debugging widget payload)
   try {
