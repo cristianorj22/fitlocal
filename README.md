@@ -39,13 +39,13 @@ Aplicativo de fitness com foco em privacidade e uso local no dispositivo.
 npm install
 ```
 
-2. Crie `.env.local`:
+2. Crie `.env.local` (veja `.env.example`). Para a implantacao atual na Vercel, a URL publica e `https://fitlocal.vercel.app/`; use `VITE_PRIVACY_POLICY_URL=https://fitlocal.vercel.app/privacy` se quiser o link absoluto no perfil e nas lojas.
 
 ```bash
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=your_backend_url
 VITE_SUPPORT_EMAIL=your_support_email
-VITE_PRIVACY_POLICY_URL=https://your-domain.com/privacy
+VITE_PRIVACY_POLICY_URL=https://fitlocal.vercel.app/privacy
 ```
 
 ## Scripts

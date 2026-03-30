@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitLocal | Fitness privado no seu dispositivo</title>
+    <title>FitLocal | Private fitness on your device</title>
     <meta
       name="description"
-      content="FitLocal: seu app de fitness privado, local-first e sem complicacao. Treinos, progresso e privacidade em primeiro lugar."
+      content="FitLocal: private, local-first fitness app with workouts, progress and privacy-first design."
     />
     <style>
       :root {
@@ -116,47 +116,152 @@
         font-size: 13px;
       }
       footer a { color: #c9f5ff; text-decoration: none; }
+      .lang-switch {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        gap: 6px;
+        z-index: 20;
+      }
+      .lang-btn {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .lang-btn.active {
+        background: rgba(34, 211, 238, 0.18);
+        color: #dffbff;
+      }
     </style>
   </head>
   <body>
+    <div class="lang-switch">
+      <button id="lang-en" class="lang-btn" type="button">EN</button>
+      <button id="lang-pt" class="lang-btn" type="button">PT-BR</button>
+    </div>
     <main class="container">
       <section class="hero">
-        <span class="pill">FitLocal • Private Fitness</span>
-        <h1>Seu fitness privado.<br />No seu dispositivo.</h1>
-        <p class="subtitle">
-          Treino, progresso e acompanhamento com foco em simplicidade.
-          Sem complicacao, sem friccao e com privacidade em primeiro lugar.
-        </p>
+        <span id="pill" class="pill">FitLocal • Private Fitness</span>
+        <h1 id="hero-title">Private fitness.<br />On your device.</h1>
+        <p id="hero-subtitle" class="subtitle">Training, progress and tracking with privacy first.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="/">Abrir app</a>
-          <a class="btn btn-secondary" href="/privacy">Politica de privacidade</a>
-          <a class="btn btn-secondary" href="/terms">Termos de uso</a>
+          <a id="cta-open" class="btn btn-primary" href="/">Open app</a>
+          <a id="cta-privacy" class="btn btn-secondary" href="/privacy">Privacy policy</a>
+          <a id="cta-terms" class="btn btn-secondary" href="/terms">Terms of use</a>
         </div>
       </section>
 
       <section class="grid">
         <article class="card">
-          <h3>Plano de treino inteligente</h3>
-          <p>Rotina organizada por dias, com timer de descanso e foco no que importa.</p>
+          <h3 id="card1-title">Smart workout plan</h3>
+          <p id="card1-text">Daily routine with rest timer and simple execution.</p>
         </article>
         <article class="card">
-          <h3>Progresso claro</h3>
-          <p>Historico de peso e fotos para visualizar evolucao real sem complexidade.</p>
+          <h3 id="card2-title">Clear progress</h3>
+          <p id="card2-text">Weight history and progress photos to show real evolution.</p>
         </article>
         <article class="card">
-          <h3>Local-first</h3>
-          <p>Dados armazenados no proprio dispositivo, com controle total do usuario.</p>
+          <h3 id="card3-title">Local-first</h3>
+          <p id="card3-text">Data stays on your device, with user-controlled privacy.</p>
         </article>
         <article class="card">
-          <h3>Pronto para lancamento</h3>
-          <p>Fluxo enxuto, rapido e desenhado para uso diario sem sobrecarga.</p>
+          <h3 id="card4-title">Built for consistency</h3>
+          <p id="card4-text">Fast and lightweight flow designed for daily use.</p>
         </article>
       </section>
     </main>
 
     <footer>
       <div>© FitLocal</div>
-      <div><a href="/privacy">Privacidade</a> • <a href="/terms">Termos</a></div>
+      <div><a id="footer-privacy" href="/privacy">Privacy</a> • <a id="footer-terms" href="/terms">Terms</a></div>
     </footer>
+    <script>
+      const STORAGE_KEY = "fitlocal_public_locale";
+      const i18n = {
+        en: {
+          title: "FitLocal | Private fitness on your device",
+          desc: "FitLocal: private, local-first fitness app with workouts, progress and privacy-first design.",
+          pill: "FitLocal • Private Fitness",
+          heroTitle: "Private fitness.<br />On your device.",
+          heroSubtitle: "Training, progress and tracking with privacy first.",
+          open: "Open app",
+          privacy: "Privacy policy",
+          terms: "Terms of use",
+          card1Title: "Smart workout plan",
+          card1Text: "Daily routine with rest timer and simple execution.",
+          card2Title: "Clear progress",
+          card2Text: "Weight history and progress photos to show real evolution.",
+          card3Title: "Local-first",
+          card3Text: "Data stays on your device, with user-controlled privacy.",
+          card4Title: "Built for consistency",
+          card4Text: "Fast and lightweight flow designed for daily use.",
+          footerPrivacy: "Privacy",
+          footerTerms: "Terms"
+        },
+        "pt-BR": {
+          title: "FitLocal | Fitness privado no seu dispositivo",
+          desc: "FitLocal: app de fitness privado, local-first, com treinos, progresso e privacidade em primeiro lugar.",
+          pill: "FitLocal • Fitness Privado",
+          heroTitle: "Seu fitness privado.<br />No seu dispositivo.",
+          heroSubtitle: "Treino, progresso e acompanhamento com foco em simplicidade e privacidade.",
+          open: "Abrir app",
+          privacy: "Politica de privacidade",
+          terms: "Termos de uso",
+          card1Title: "Plano de treino inteligente",
+          card1Text: "Rotina organizada por dias, com timer de descanso e foco no que importa.",
+          card2Title: "Progresso claro",
+          card2Text: "Historico de peso e fotos para visualizar evolucao real sem complexidade.",
+          card3Title: "Local-first",
+          card3Text: "Dados armazenados no proprio dispositivo, com controle total do usuario.",
+          card4Title: "Pronto para lancamento",
+          card4Text: "Fluxo enxuto, rapido e desenhado para uso diario sem sobrecarga.",
+          footerPrivacy: "Privacidade",
+          footerTerms: "Termos"
+        }
+      };
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      const langEnBtn = document.getElementById("lang-en");
+      const langPtBtn = document.getElementById("lang-pt");
+
+      function setLocale(locale) {
+        const L = locale === "pt-BR" ? "pt-BR" : "en";
+        const t = i18n[L];
+        localStorage.setItem(STORAGE_KEY, L);
+        document.documentElement.lang = L;
+        document.title = t.title;
+        if (metaDesc) metaDesc.setAttribute("content", t.desc);
+
+        document.getElementById("pill").textContent = t.pill;
+        document.getElementById("hero-title").innerHTML = t.heroTitle;
+        document.getElementById("hero-subtitle").textContent = t.heroSubtitle;
+        document.getElementById("cta-open").textContent = t.open;
+        document.getElementById("cta-privacy").textContent = t.privacy;
+        document.getElementById("cta-terms").textContent = t.terms;
+        document.getElementById("card1-title").textContent = t.card1Title;
+        document.getElementById("card1-text").textContent = t.card1Text;
+        document.getElementById("card2-title").textContent = t.card2Title;
+        document.getElementById("card2-text").textContent = t.card2Text;
+        document.getElementById("card3-title").textContent = t.card3Title;
+        document.getElementById("card3-text").textContent = t.card3Text;
+        document.getElementById("card4-title").textContent = t.card4Title;
+        document.getElementById("card4-text").textContent = t.card4Text;
+        document.getElementById("footer-privacy").textContent = t.footerPrivacy;
+        document.getElementById("footer-terms").textContent = t.footerTerms;
+
+        langEnBtn.classList.toggle("active", L === "en");
+        langPtBtn.classList.toggle("active", L === "pt-BR");
+      }
+
+      langEnBtn.addEventListener("click", () => setLocale("en"));
+      langPtBtn.addEventListener("click", () => setLocale("pt-BR"));
+
+      setLocale(localStorage.getItem(STORAGE_KEY) || "en");
+    </script>
   </body>
 </html>

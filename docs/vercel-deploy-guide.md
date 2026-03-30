@@ -1,5 +1,7 @@
 # Vercel Deploy Guide (FitLocal)
 
+**URL de producao atual:** [https://fitlocal.vercel.app/](https://fitlocal.vercel.app/)
+
 Este guia deixa a publicacao pronta com:
 - app React em `/`
 - landing publica em `/landing`
@@ -45,7 +47,7 @@ Copie os valores de `.env.example` para a Vercel:
 - `VITE_BASE44_APP_ID`
 - `VITE_BASE44_APP_BASE_URL`
 - `VITE_SUPPORT_EMAIL`
-- `VITE_PRIVACY_POLICY_URL` (recomendado: `https://seu-dominio.com/privacy`)
+- `VITE_PRIVACY_POLICY_URL` (producao: `https://fitlocal.vercel.app/privacy`; com dominio proprio, substitua pelo seu host)
 
 ## 6) Deploy
 
@@ -69,10 +71,13 @@ Teste as rotas:
 2. Adicione seu dominio
 3. Configure DNS no registrador
 
-Use nas lojas:
+Use nas lojas (producao Vercel):
 
-- Privacy Policy URL: `https://seu-dominio.com/privacy`
-- Terms URL: `https://seu-dominio.com/terms`
+- Privacy Policy URL: `https://fitlocal.vercel.app/privacy`
+- Terms URL: `https://fitlocal.vercel.app/terms`
+- Landing: `https://fitlocal.vercel.app/landing`
+
+Com dominio customizado, troque o host por `https://seu-dominio.com/...`.
 
 ## 9) Troubleshooting rapido
 

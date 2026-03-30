@@ -2,6 +2,8 @@
 
 Use este arquivo como checklist operacional para preparar screenshots e metadata.
 
+**URLs publicas (Vercel):** [https://fitlocal.vercel.app/](https://fitlocal.vercel.app/) — landing `/landing`, privacidade `/privacy`, termos `/terms`.
+
 ## 1) Google Play
 
 ## Obrigatorios
@@ -64,8 +66,8 @@ Use este arquivo como checklist operacional para preparar screenshots e metadata
 - [ ] Assets batem com build atual
 - [ ] Textos PT-BR e EN revisados
 - [ ] URLs publicas funcionando:
-  - [ ] `/landing`
-  - [ ] `/privacy`
-  - [ ] `/terms`
+  - [ ] `https://fitlocal.vercel.app/landing`
+  - [ ] `https://fitlocal.vercel.app/privacy`
+  - [ ] `https://fitlocal.vercel.app/terms`
 - [ ] Nome do app final definido:
   - Recomendado: `FitLocal: Private Fitness Tracker`

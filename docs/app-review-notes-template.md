@@ -31,7 +31,8 @@ Copie e ajuste este modelo no campo App Review Notes.
 - O usuario pode apagar os dados no proprio app:
   - Profile > Delete All Data.
 - URL publica da politica de privacidade:
-  - `/privacy` ou valor configurado em `VITE_PRIVACY_POLICY_URL`.
+  - Producao: `https://fitlocal.vercel.app/privacy`
+  - Alternativa relativa no app: `/privacy` ou valor em `VITE_PRIVACY_POLICY_URL`.
 
 ## Health disclaimer
 

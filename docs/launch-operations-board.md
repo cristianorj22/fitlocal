@@ -27,7 +27,7 @@ Objetivo: acompanhar execucao com responsavel, prazo, status e criterio de pront
 | OPS-10 | Internal testing Play + TestFlight | Founder | D+6 | todo | Build instalada e testada em dispositivos reais |
 | OPS-11 | Correcoes de bugs criticos | Eng. | D+7 | todo | Nenhum bug P0/P1 aberto |
 | OPS-12 | Submissao Play + Apple | Founder | D+8 | todo | Apps enviados para review |
-| OPS-13 | Landing page de pre-lancamento com CTA | Growth/Eng. | D+8 | in_progress | URL no ar com CTA para lojas/lista |
+| OPS-13 | Landing page de pre-lancamento com CTA | Growth/Eng. | D+8 | done | `https://fitlocal.vercel.app/landing` no ar com CTA para lojas/lista |
 | OPS-14 | Criar perfil X/Twitter e calendario de 2 semanas | Growth | D+9 | todo | Conta criada + 6 posts agendados |
 | OPS-15 | Soft launch e monitoramento 72h | Founder | D+12 | todo | Sem regressao critica apos rollout |
 | OPS-16 | Fechar plano de hotfix | Eng./Founder | D+12 | todo | Processo de resposta documentado |

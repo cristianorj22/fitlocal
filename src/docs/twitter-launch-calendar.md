@@ -13,7 +13,7 @@
 - **Nome:** FitLocal — Offline Fitness
 - **Bio EN:** "Your private fitness tracker. Workouts, macros & progress — 100% on your device. No cloud. No account. No excuses. 🏋️📱"
 - **Bio PT-BR (alt):** "Seu tracker fitness privado. Treinos, macros e progresso — 100% no seu dispositivo. Sem nuvem. Sem conta. 🏋️📱"
-- **Link:** https://fitlocal.app (ou link da loja)
+- **Link:** https://fitlocal.vercel.app/ (ou dominio proprio / link da loja quando publicado)
 - **Banner:** Feature graphic adaptada (1500×500 px)
 - **Avatar:** Ícone do app (400×400 px)
 - **Pinned tweet:** Tweet do dia do lançamento (D-Day)

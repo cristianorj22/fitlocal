@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitLocal | Termos de Uso</title>
-    <meta name="description" content="Termos de Uso do FitLocal." />
+    <title>FitLocal | Terms of Use</title>
+    <meta name="description" content="FitLocal Terms of Use." />
     <style>
       body {
         margin: 0;
@@ -21,44 +21,140 @@
       h1 { font-size: 34px; margin-bottom: 8px; }
       p, li { color: #b8c0e0; line-height: 1.6; }
       a { color: #67e8f9; }
+      .lang-switch {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        gap: 6px;
+      }
+      .lang-btn {
+        border: 1px solid rgba(103, 232, 249, 0.45);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #e8ecff;
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .lang-btn.active {
+        background: rgba(103, 232, 249, 0.18);
+      }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <h1>Termos de Uso</h1>
-      <p><strong>Ultima atualizacao:</strong> 2026-03-25</p>
-
-      <h2>1. Aceitacao</h2>
-      <p>Ao usar o FitLocal, voce concorda com estes Termos de Uso.</p>
-
-      <h2>2. Escopo do servico</h2>
-      <p>O FitLocal oferece recursos de acompanhamento fitness para fins educacionais e de organizacao pessoal.</p>
-
-      <h2>3. Aviso importante de saude</h2>
-      <p>
-        O FitLocal nao e dispositivo medico. O conteudo e as estimativas do app nao substituem orientacao
-        profissional de saude. Consulte um profissional qualificado antes de alterar dieta, exercicios ou medicacao.
-      </p>
-
-      <h2>4. Dados do usuario</h2>
-      <p>
-        O app pode armazenar dados localmente no seu dispositivo para funcionamento das funcionalidades.
-        Voce e responsavel por como utiliza essas informacoes.
-      </p>
-
-      <h2>5. Limites de responsabilidade</h2>
-      <p>
-        O uso do app e por sua conta e risco. Na extensao permitida por lei, o FitLocal nao se responsabiliza
-        por danos indiretos decorrentes do uso do aplicativo.
-      </p>
-
-      <h2>6. Alteracoes destes termos</h2>
-      <p>Podemos atualizar estes termos periodicamente. A versao vigente sera publicada nesta pagina.</p>
-
-      <h2>7. Contato</h2>
-      <p>Para duvidas, utilize o email de suporte informado no app.</p>
-
-      <p><a href="/landing">Voltar para a landing</a></p>
+    <div class="lang-switch">
+      <button id="lang-en" class="lang-btn" type="button">EN</button>
+      <button id="lang-pt" class="lang-btn" type="button">PT-BR</button>
     </div>
+    <div class="wrap">
+      <h1 id="title">Terms of Use</h1>
+      <p id="updated"><strong>Last updated:</strong> 2026-03-25</p>
+
+      <h2 id="s1-title">1. Acceptance</h2>
+      <p id="s1-text">By using FitLocal, you agree to these Terms of Use.</p>
+
+      <h2 id="s2-title">2. Service scope</h2>
+      <p id="s2-text">FitLocal provides fitness tracking features for educational and personal organization purposes.</p>
+
+      <h2 id="s3-title">3. Important health notice</h2>
+      <p id="s3-text">
+        FitLocal is not a medical device. Content and estimates do not replace professional medical guidance.
+      </p>
+
+      <h2 id="s4-title">4. User data</h2>
+      <p id="s4-text">The app may store data locally on your device to support its features.</p>
+
+      <h2 id="s5-title">5. Limitation of liability</h2>
+      <p id="s5-text">To the extent allowed by law, FitLocal is not liable for indirect damages resulting from app use.</p>
+
+      <h2 id="s6-title">6. Updates to these terms</h2>
+      <p id="s6-text">We may update these terms periodically. The current version will be published on this page.</p>
+
+      <h2 id="s7-title">7. Contact</h2>
+      <p id="s7-text">For questions, use the support contact shown in the app.</p>
+
+      <p><a id="back" href="/landing">Back to landing</a></p>
+    </div>
+    <script>
+      const STORAGE_KEY = "fitlocal_public_locale";
+      const i18n = {
+        en: {
+          title: "FitLocal | Terms of Use",
+          desc: "FitLocal Terms of Use.",
+          h1: "Terms of Use",
+          updated: "<strong>Last updated:</strong> 2026-03-25",
+          s1Title: "1. Acceptance",
+          s1Text: "By using FitLocal, you agree to these Terms of Use.",
+          s2Title: "2. Service scope",
+          s2Text: "FitLocal provides fitness tracking features for educational and personal organization purposes.",
+          s3Title: "3. Important health notice",
+          s3Text: "FitLocal is not a medical device. Content and estimates do not replace professional medical guidance.",
+          s4Title: "4. User data",
+          s4Text: "The app may store data locally on your device to support its features.",
+          s5Title: "5. Limitation of liability",
+          s5Text: "To the extent allowed by law, FitLocal is not liable for indirect damages resulting from app use.",
+          s6Title: "6. Updates to these terms",
+          s6Text: "We may update these terms periodically. The current version will be published on this page.",
+          s7Title: "7. Contact",
+          s7Text: "For questions, use the support contact shown in the app.",
+          back: "Back to landing"
+        },
+        "pt-BR": {
+          title: "FitLocal | Termos de Uso",
+          desc: "Termos de Uso do FitLocal.",
+          h1: "Termos de Uso",
+          updated: "<strong>Ultima atualizacao:</strong> 2026-03-25",
+          s1Title: "1. Aceitacao",
+          s1Text: "Ao usar o FitLocal, voce concorda com estes Termos de Uso.",
+          s2Title: "2. Escopo do servico",
+          s2Text: "O FitLocal oferece recursos de acompanhamento fitness para fins educacionais e de organizacao pessoal.",
+          s3Title: "3. Aviso importante de saude",
+          s3Text: "O FitLocal nao e dispositivo medico. O conteudo e as estimativas do app nao substituem orientacao profissional de saude.",
+          s4Title: "4. Dados do usuario",
+          s4Text: "O app pode armazenar dados localmente no seu dispositivo para funcionamento das funcionalidades.",
+          s5Title: "5. Limites de responsabilidade",
+          s5Text: "Na extensao permitida por lei, o FitLocal nao se responsabiliza por danos indiretos decorrentes do uso do app.",
+          s6Title: "6. Alteracoes destes termos",
+          s6Text: "Podemos atualizar estes termos periodicamente. A versao vigente sera publicada nesta pagina.",
+          s7Title: "7. Contato",
+          s7Text: "Para duvidas, utilize o contato de suporte informado no app.",
+          back: "Voltar para a landing"
+        }
+      };
+      const metaDesc = document.querySelector('meta[name="description"]');
+      const langEnBtn = document.getElementById("lang-en");
+      const langPtBtn = document.getElementById("lang-pt");
+      function setLocale(locale) {
+        const L = locale === "pt-BR" ? "pt-BR" : "en";
+        const t = i18n[L];
+        localStorage.setItem(STORAGE_KEY, L);
+        document.documentElement.lang = L;
+        document.title = t.title;
+        if (metaDesc) metaDesc.setAttribute("content", t.desc);
+        document.getElementById("title").textContent = t.h1;
+        document.getElementById("updated").innerHTML = t.updated;
+        document.getElementById("s1-title").textContent = t.s1Title;
+        document.getElementById("s1-text").textContent = t.s1Text;
+        document.getElementById("s2-title").textContent = t.s2Title;
+        document.getElementById("s2-text").textContent = t.s2Text;
+        document.getElementById("s3-title").textContent = t.s3Title;
+        document.getElementById("s3-text").textContent = t.s3Text;
+        document.getElementById("s4-title").textContent = t.s4Title;
+        document.getElementById("s4-text").textContent = t.s4Text;
+        document.getElementById("s5-title").textContent = t.s5Title;
+        document.getElementById("s5-text").textContent = t.s5Text;
+        document.getElementById("s6-title").textContent = t.s6Title;
+        document.getElementById("s6-text").textContent = t.s6Text;
+        document.getElementById("s7-title").textContent = t.s7Title;
+        document.getElementById("s7-text").textContent = t.s7Text;
+        document.getElementById("back").textContent = t.back;
+        langEnBtn.classList.toggle("active", L === "en");
+        langPtBtn.classList.toggle("active", L === "pt-BR");
+      }
+      langEnBtn.addEventListener("click", () => setLocale("en"));
+      langPtBtn.addEventListener("click", () => setLocale("pt-BR"));
+      setLocale(localStorage.getItem(STORAGE_KEY) || "en");
+    </script>
   </body>
 </html>

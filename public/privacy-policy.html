@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitLocal | Politica de Privacidade</title>
-    <meta name="description" content="Politica de Privacidade do FitLocal." />
+    <title>FitLocal | Privacy Policy</title>
+    <meta name="description" content="FitLocal Privacy Policy." />
     <style>
       body {
         margin: 0;
@@ -21,45 +21,141 @@
       h1 { font-size: 34px; margin-bottom: 8px; }
       p, li { color: #b8c0e0; line-height: 1.6; }
       a { color: #67e8f9; }
+      .lang-switch {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        gap: 6px;
+      }
+      .lang-btn {
+        border: 1px solid rgba(103, 232, 249, 0.45);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #e8ecff;
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .lang-btn.active {
+        background: rgba(103, 232, 249, 0.18);
+      }
     </style>
   </head>
   <body>
+    <div class="lang-switch">
+      <button id="lang-en" class="lang-btn" type="button">EN</button>
+      <button id="lang-pt" class="lang-btn" type="button">PT-BR</button>
+    </div>
     <div class="wrap">
-      <h1>Politica de Privacidade</h1>
-      <p><strong>Ultima atualizacao:</strong> 2026-03-25</p>
+      <h1 id="title">Privacy Policy</h1>
+      <p id="updated"><strong>Last updated:</strong> 2026-03-25</p>
 
-      <h2>1. Visao geral</h2>
-      <p>
+      <h2 id="s1-title">1. Overview</h2>
+      <p id="s1-text">
         Esta politica descreve como o FitLocal processa dados para oferecer funcionalidades de acompanhamento fitness.
       </p>
 
-      <h2>2. Dados processados</h2>
+      <h2 id="s2-title">2. Data we process</h2>
       <ul>
-        <li>Dados de perfil (ex.: nome, idade, peso, altura, objetivo).</li>
-        <li>Historico de check-ins e peso.</li>
-        <li>Fotos de progresso e notas opcionais.</li>
+        <li id="li1">Profile data (e.g. name, age, weight, height, goal).</li>
+        <li id="li2">Check-in and weight history.</li>
+        <li id="li3">Progress photos and optional notes.</li>
       </ul>
 
-      <h2>3. Armazenamento</h2>
-      <p>
+      <h2 id="s3-title">3. Storage</h2>
+      <p id="s3-text">
         Os dados podem ser armazenados localmente no dispositivo/navegador para funcionamento do app.
       </p>
 
-      <h2>4. Exclusao de dados</h2>
-      <p>
-        O usuario pode remover os dados locais diretamente no aplicativo usando a opcao
-        <strong> Delete All Data</strong>.
+      <h2 id="s4-title">4. Data deletion</h2>
+      <p id="s4-text">Users can remove local data in the app using <strong>Delete All Data</strong>.</p>
+
+      <h2 id="s5-title">5. Contact</h2>
+      <p id="s5-text">For privacy and support requests, use the support contact shown in the app.</p>
+
+      <p id="note">
+        This is a static page for store metadata. In-app version is available at <a href="/privacy">/privacy</a>.
       </p>
 
-      <h2>5. Contato</h2>
-      <p>Para solicitacoes de privacidade e suporte, use o contato informado no app.</p>
-
-      <p>
-        Esta pagina e uma versao estatica para uso em metadata de loja. A versao completa no app esta em
-        <a href="/privacy"> /privacy</a>.
-      </p>
-
-      <p><a href="/landing">Voltar para a landing</a></p>
+      <p><a id="back" href="/landing">Back to landing</a></p>
     </div>
+    <script>
+      const STORAGE_KEY = "fitlocal_public_locale";
+      const i18n = {
+        en: {
+          title: "FitLocal | Privacy Policy",
+          desc: "FitLocal Privacy Policy.",
+          h1: "Privacy Policy",
+          updated: "<strong>Last updated:</strong> 2026-03-25",
+          s1Title: "1. Overview",
+          s1Text: "This policy explains how FitLocal processes data to provide fitness tracking features.",
+          s2Title: "2. Data we process",
+          li1: "Profile data (e.g. name, age, weight, height, goal).",
+          li2: "Check-in and weight history.",
+          li3: "Progress photos and optional notes.",
+          s3Title: "3. Storage",
+          s3Text: "Data may be stored locally on your device/browser to run app features.",
+          s4Title: "4. Data deletion",
+          s4Text: "Users can remove local data in the app using <strong>Delete All Data</strong>.",
+          s5Title: "5. Contact",
+          s5Text: "For privacy and support requests, use the support contact shown in the app.",
+          note: "This is a static page for store metadata. In-app version is available at <a href=\"/privacy\">/privacy</a>.",
+          back: "Back to landing"
+        },
+        "pt-BR": {
+          title: "FitLocal | Politica de Privacidade",
+          desc: "Politica de Privacidade do FitLocal.",
+          h1: "Politica de Privacidade",
+          updated: "<strong>Ultima atualizacao:</strong> 2026-03-25",
+          s1Title: "1. Visao geral",
+          s1Text: "Esta politica descreve como o FitLocal processa dados para oferecer funcionalidades de acompanhamento fitness.",
+          s2Title: "2. Dados processados",
+          li1: "Dados de perfil (ex.: nome, idade, peso, altura, objetivo).",
+          li2: "Historico de check-ins e peso.",
+          li3: "Fotos de progresso e notas opcionais.",
+          s3Title: "3. Armazenamento",
+          s3Text: "Os dados podem ser armazenados localmente no dispositivo/navegador para funcionamento do app.",
+          s4Title: "4. Exclusao de dados",
+          s4Text: "O usuario pode remover os dados locais diretamente no aplicativo usando <strong>Delete All Data</strong>.",
+          s5Title: "5. Contato",
+          s5Text: "Para solicitacoes de privacidade e suporte, use o contato informado no app.",
+          note: "Esta pagina e uma versao estatica para uso em metadata de loja. A versao completa no app esta em <a href=\"/privacy\">/privacy</a>.",
+          back: "Voltar para a landing"
+        }
+      };
+      const metaDesc = document.querySelector('meta[name="description"]');
+      const langEnBtn = document.getElementById("lang-en");
+      const langPtBtn = document.getElementById("lang-pt");
+      function setLocale(locale) {
+        const L = locale === "pt-BR" ? "pt-BR" : "en";
+        const t = i18n[L];
+        localStorage.setItem(STORAGE_KEY, L);
+        document.documentElement.lang = L;
+        document.title = t.title;
+        if (metaDesc) metaDesc.setAttribute("content", t.desc);
+        document.getElementById("title").textContent = t.h1;
+        document.getElementById("updated").innerHTML = t.updated;
+        document.getElementById("s1-title").textContent = t.s1Title;
+        document.getElementById("s1-text").textContent = t.s1Text;
+        document.getElementById("s2-title").textContent = t.s2Title;
+        document.getElementById("li1").textContent = t.li1;
+        document.getElementById("li2").textContent = t.li2;
+        document.getElementById("li3").textContent = t.li3;
+        document.getElementById("s3-title").textContent = t.s3Title;
+        document.getElementById("s3-text").textContent = t.s3Text;
+        document.getElementById("s4-title").textContent = t.s4Title;
+        document.getElementById("s4-text").innerHTML = t.s4Text;
+        document.getElementById("s5-title").textContent = t.s5Title;
+        document.getElementById("s5-text").textContent = t.s5Text;
+        document.getElementById("note").innerHTML = t.note;
+        document.getElementById("back").textContent = t.back;
+        langEnBtn.classList.toggle("active", L === "en");
+        langPtBtn.classList.toggle("active", L === "pt-BR");
+      }
+      langEnBtn.addEventListener("click", () => setLocale("en"));
+      langPtBtn.addEventListener("click", () => setLocale("pt-BR"));
+      setLocale(localStorage.getItem(STORAGE_KEY) || "en");
+    </script>
   </body>
 </html>
