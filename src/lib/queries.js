@@ -90,6 +90,9 @@ export const useAddWeight = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (kg) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'queries.js:useAddWeight:mutationFn',message:'addWeight mutationFn',data:{kg,kgIsNaN:Number.isNaN(kg)},timestamp:Date.now(),hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
       await addWeightEntry(kg);
       return getWeightLog();
     },
@@ -104,10 +107,16 @@ export const useAddWeight = () => {
       return { prev };
     },
     onError: (err, _vars, ctx) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'queries.js:useAddWeight:onError',message:'addWeight error',data:{msg:String(err?.message||err)},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       qc.setQueryData(KEYS.weightLog, ctx?.prev);
       notifyMutationError(err, 'errors.weight');
     },
     onSuccess: (newLog) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'queries.js:useAddWeight:onSuccess',message:'addWeight success',data:{newLogLen:Array.isArray(newLog)?newLog.length:'n/a'},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
       // Sync widget data after weight entry
       const profile = getProfile();
       if (profile) syncWidgetData(profile, newLog).catch(() => {});
