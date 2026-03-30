@@ -74,6 +74,8 @@ VITE_PRIVACY_POLICY_URL=https://your-domain.com/privacy
 - [Apple readiness checklist](docs/apple-readiness-checklist.md)
 - [App review notes template](docs/app-review-notes-template.md)
 - [Roadmap de lancamento](docs/launch-roadmap.md)
+- [Vercel deploy guide](docs/vercel-deploy-guide.md)
+- [Store assets checklist](docs/store-assets-checklist.md)
 
 ## Limitacoes e notas
 
