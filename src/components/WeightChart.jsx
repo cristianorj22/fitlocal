@@ -15,6 +15,8 @@ const C = {
 };
 
 export default function WeightChart({ log, targetWeight }) {
+  const { t } = useI18n();
+
   // #region agent log
   fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'WeightChart.jsx:entry',message:'WeightChart render',data:{logLen:log?.length,typeofT:typeof t,firstDate:log?.[0]?.date},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
   // #endregion
@@ -26,10 +28,25 @@ export default function WeightChart({ log, targetWeight }) {
     );
   }
 
-  const data = log.slice(-30).map((e) => ({
-    date: e.date.slice(5),
-    kg: e.kg,
-  }));
+  const target = Number.isFinite(parseFloat(targetWeight)) ? parseFloat(targetWeight) : null;
+
+  // Guard against corrupt/invalid entries (prevents React/recharts from crashing).
+  const data = log
+    .slice(-30)
+    .map((e) => {
+      const date = typeof e?.date === 'string' ? e.date : '';
+      const kgNum = typeof e?.kg === 'string' ? parseFloat(e.kg) : e?.kg;
+      return { date: date.slice(5), kg: kgNum };
+    })
+    .filter((e) => e.date.length > 0 && Number.isFinite(e.kg));
+
+  if (data.length === 0) {
+    return (
+      <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-center h-48 text-muted-foreground text-sm">
+        No weight entries yet
+      </div>
+    );
+  }
   // #region agent log
   fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'WeightChart.jsx:afterMap',message:'chart data mapped',data:{dataLen:data?.length,sampleKg:data?.[data.length-1]?.kg},timestamp:Date.now(),hypothesisId:'B'})}).catch(()=>{});
   // #endregion
@@ -55,9 +72,9 @@ export default function WeightChart({ log, targetWeight }) {
           <XAxis dataKey="date" tick={{ fontSize: 10, fill: C.axis }} tickLine={false} axisLine={false} />
           <YAxis tick={{ fontSize: 10, fill: C.axis }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
           <Tooltip content={<CustomTooltip />} />
-          {targetWeight && (
+          {target !== null && (
             <ReferenceLine
-              y={parseFloat(targetWeight)}
+              y={target}
               stroke={C.target}
               strokeDasharray="4 4"
               label={{ value: t('dashboard.targetLine'), fill: C.target, fontSize: 10 }}

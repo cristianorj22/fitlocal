@@ -275,6 +275,7 @@ export default {
     unknown: 'Ocorreu um erro inesperado. Tente novamente.',
     checkIn: 'Não foi possível guardar o check-in. Tente novamente.',
     weight: 'Não foi possível guardar o peso. Tente novamente.',
+    invalidNumber: 'Por favor, insira números válidos.',
     profileSave: 'Não foi possível guardar o perfil. Tente novamente.',
     profileStorage: 'Não foi possível guardar o perfil no armazenamento do dispositivo.',
     photoSave: 'Não foi possível guardar a foto. O armazenamento pode estar cheio.',

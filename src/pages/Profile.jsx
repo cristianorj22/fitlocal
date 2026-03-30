@@ -15,6 +15,7 @@ import SensoryPreferences from '../components/SensoryPreferences';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 import { normalizeLocale } from '../lib/i18n-utils.js';
 import { toast } from '@/components/ui/use-toast';
+import { parseFiniteDecimal, parseFiniteInteger, sanitizeDecimalInput, sanitizeIntegerInput } from '../lib/numeric';
 
 const GOAL_EMOJI = { fat_loss: '🔥', hypertrophy: '💪', endurance: '🏃', maintenance: '⚖️' };
 const GOALS = ['fat_loss', 'hypertrophy', 'endurance', 'maintenance'];
@@ -52,9 +53,13 @@ export default function Profile() {
   };
 
   const recalcAndSave = () => {
-    const w = parseFloat(profile.weight);
-    const h = parseFloat(profile.height);
-    const a = parseInt(profile.age);
+    const w = parseFiniteDecimal(profile.weight);
+    const h = parseFiniteDecimal(profile.height);
+    const a = parseFiniteInteger(profile.age);
+    if (w === null || h === null || a === null) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: t('errors.invalidNumber') });
+      return;
+    }
     const bmi = calcBMI(w, h);
     const bmr = calcBMR(w, h, a, profile.gender);
     const tdee = calcTDEE(bmr, profile.activityLevel || 'moderate');
@@ -82,9 +87,13 @@ export default function Profile() {
 
   const applyGender = (g) => {
     if (g === profile.gender) return;
-    const w = parseFloat(profile.weight);
-    const h = parseFloat(profile.height);
-    const a = parseInt(profile.age);
+    const w = parseFiniteDecimal(profile.weight);
+    const h = parseFiniteDecimal(profile.height);
+    const a = parseFiniteInteger(profile.age);
+    if (w === null || h === null || a === null) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: t('errors.invalidNumber') });
+      return;
+    }
     const bmi = calcBMI(w, h);
     const bmr = calcBMR(w, h, a, g);
     const tdee = calcTDEE(bmr, profile.activityLevel || 'moderate');
@@ -99,11 +108,16 @@ export default function Profile() {
   };
 
   const calcVo2 = () => {
-    const time = parseFloat(vo2Form.timeMin);
-    const hr = parseFloat(vo2Form.heartRate);
-    if (!time || !hr) return;
-    const vo2 = calcVO2Max(parseFloat(profile.weight), parseInt(profile.age), profile.gender, time, hr);
-    const cat = vo2Category(vo2, parseInt(profile.age), profile.gender);
+    const time = parseFiniteDecimal(vo2Form.timeMin);
+    const hr = parseFiniteInteger(vo2Form.heartRate);
+    const w = parseFiniteDecimal(profile.weight);
+    const a = parseFiniteInteger(profile.age);
+    if (time === null || hr === null || w === null || a === null) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: t('errors.invalidNumber') });
+      return;
+    }
+    const vo2 = calcVO2Max(w, a, profile.gender, time, hr);
+    const cat = vo2Category(vo2, a, profile.gender);
     setVo2Result({ vo2: vo2.toFixed(1), category: cat });
   };
 
@@ -183,9 +197,14 @@ export default function Profile() {
               <label className="text-xs text-muted-foreground mb-1 block">{label}</label>
               <AppInput
                 inputMode={inputMode}
-                pattern="[0-9]*"
+                pattern={inputMode === 'decimal' ? '[0-9]*[.,]?[0-9]*' : '[0-9]*'}
                 value={profile[key] || ''}
-                onChange={(e) => set(key, e.target.value)}
+                onChange={(e) =>
+                  set(
+                    key,
+                    key === 'age' ? sanitizeIntegerInput(e.target.value) : sanitizeDecimalInput(e.target.value),
+                  )
+                }
               />
             </div>
           ))}
@@ -288,10 +307,10 @@ export default function Profile() {
                 <label className="text-xs text-muted-foreground mb-1 block">{t('profile.timeMin')}</label>
                 <AppInput
                   inputMode="decimal"
-                  pattern="[0-9]*"
+                  pattern="[0-9]*[.,]?[0-9]*"
                   placeholder="e.g. 15.5"
                   value={vo2Form.timeMin}
-                  onChange={(e) => setVo2Form((f) => ({ ...f, timeMin: e.target.value }))}
+                  onChange={(e) => setVo2Form((f) => ({ ...f, timeMin: sanitizeDecimalInput(e.target.value) }))}
                 />
               </div>
               <div>
@@ -301,7 +320,7 @@ export default function Profile() {
                   pattern="[0-9]*"
                   placeholder="e.g. 155"
                   value={vo2Form.heartRate}
-                  onChange={(e) => setVo2Form((f) => ({ ...f, heartRate: e.target.value }))}
+                  onChange={(e) => setVo2Form((f) => ({ ...f, heartRate: sanitizeIntegerInput(e.target.value) }))}
                 />
               </div>
             </div>

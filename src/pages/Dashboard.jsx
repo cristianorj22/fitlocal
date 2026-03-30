@@ -7,11 +7,13 @@ import { CheckCircle, Plus, Beef, Wheat, Droplets } from 'lucide-react';
 import InfoTooltip from '../components/InfoTooltip';
 import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
+import { toast } from '@/components/ui/use-toast';
 import { useProfile, useWeightLog, useCheckedIn, useCheckIn, useAddWeight } from '../lib/queries';
 import StreakBadge from '../components/StreakBadge';
 import { useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
+import { parseFiniteDecimal, sanitizeDecimalInput } from '../lib/numeric';
 
 function bmiCatKey(bmi) {
   if (bmi < 18.5) return 'underweight';
@@ -38,10 +40,18 @@ export default function Dashboard() {
   const bmiLabel = t(`bmiCats.${bmiCatKey(bmi)}`);
 
   const handleAddWeight = () => {
-    if (!newWeight) return;
+    const kg = parseFiniteDecimal(newWeight);
+    if (kg === null) {
+      toast({
+        variant: 'destructive',
+        title: t('errors.genericTitle'),
+        description: t('errors.invalidNumber'),
+      });
+      return;
+    }
     hapticLight();
     audioTick();
-    addWeight.mutate(parseFloat(newWeight));
+    addWeight.mutate(kg);
     setNewWeight('');
     setShowAddWeight(false);
   };
@@ -174,11 +184,11 @@ export default function Dashboard() {
             <div className="flex gap-3">
               <input
                 inputMode="decimal"
-                pattern="[0-9]*"
+                pattern="[0-9]*[.,]?[0-9]*"
                 className="flex-1 min-h-[44px] bg-muted border border-border rounded-xl px-4 py-3 text-foreground text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
                 placeholder={t('dashboard.weightPlaceholder')}
                 value={newWeight}
-                onChange={(e) => setNewWeight(e.target.value)}
+                onChange={(e) => setNewWeight(sanitizeDecimalInput(e.target.value))}
                 autoFocus
               />
               <button
@@ -191,7 +201,7 @@ export default function Dashboard() {
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddWeight(false)}
+                onClick={() => { setShowAddWeight(false); setNewWeight(''); }}
                 className="px-4 py-3 bg-muted rounded-xl text-sm text-muted-foreground"
               >
                 {t('dashboard.cancel')}

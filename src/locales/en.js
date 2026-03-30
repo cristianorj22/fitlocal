@@ -275,6 +275,7 @@ export default {
     unknown: 'An unexpected error occurred. Please try again.',
     checkIn: 'Could not save check-in. Please try again.',
     weight: 'Could not save weight. Please try again.',
+    invalidNumber: 'Please enter valid numbers.',
     profileSave: 'Could not save profile. Please try again.',
     profileStorage: 'Unable to save profile to device storage.',
     photoSave: 'Could not save photo. Storage may be full.',

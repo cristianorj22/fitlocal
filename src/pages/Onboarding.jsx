@@ -11,6 +11,7 @@ import HealthDisclaimer from '../components/HealthDisclaimer';
 import GoalEstimate from '../components/GoalEstimate';
 import { useSaveProfile } from '../lib/queries';
 import { useTranslationFor } from '../hooks/useTranslationFor.js';
+import { parseFiniteDecimal, parseFiniteInteger, sanitizeDecimalInput, sanitizeIntegerInput } from '../lib/numeric';
 
 const STEPS = ['intro', 'body', 'goal', 'schedule'];
 
@@ -62,9 +63,10 @@ export default function Onboarding() {
   };
 
   const finish = () => {
-    const w = parseFloat(form.weight);
-    const h = parseFloat(form.height);
-    const a = parseInt(form.age);
+    const w = parseFiniteDecimal(form.weight);
+    const h = parseFiniteDecimal(form.height);
+    const a = parseFiniteInteger(form.age);
+    if (w === null || h === null || a === null) return;
     const bmi = calcBMI(w, h);
     const bmr = calcBMR(w, h, a, form.gender);
     const tdee = calcTDEE(bmr, form.activityLevel);
@@ -78,7 +80,14 @@ export default function Onboarding() {
   };
 
   const canNext = () => {
-    if (step === 1) return form.name && form.weight && form.height && form.age;
+    if (step === 1) {
+      return (
+        form.name &&
+        parseFiniteDecimal(form.weight) !== null &&
+        parseFiniteDecimal(form.height) !== null &&
+        parseFiniteInteger(form.age) !== null
+      );
+    }
     if (step === 2) return form.goal;
     if (step === 3) return form.days.length > 0;
     return true;
@@ -159,20 +168,20 @@ export default function Onboarding() {
                     <label className="text-xs text-muted-foreground mb-1 block">{t('profile.weightKg')}</label>
                     <AppInput
                       inputMode="decimal"
-                      pattern="[0-9]*"
+                      pattern="[0-9]*[.,]?[0-9]*"
                       placeholder="70"
                       value={form.weight}
-                      onChange={(e) => set('weight', e.target.value)}
+                      onChange={(e) => set('weight', sanitizeDecimalInput(e.target.value))}
                     />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1 block">{t('profile.heightCm')}</label>
                     <AppInput
                       inputMode="decimal"
-                      pattern="[0-9]*"
+                      pattern="[0-9]*[.,]?[0-9]*"
                       placeholder="175"
                       value={form.height}
-                      onChange={(e) => set('height', e.target.value)}
+                      onChange={(e) => set('height', sanitizeDecimalInput(e.target.value))}
                     />
                   </div>
                   <div>
@@ -182,17 +191,17 @@ export default function Onboarding() {
                       pattern="[0-9]*"
                       placeholder="25"
                       value={form.age}
-                      onChange={(e) => set('age', e.target.value)}
+                      onChange={(e) => set('age', sanitizeIntegerInput(e.target.value))}
                     />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1 block">{t('profile.targetKg')}</label>
                     <AppInput
                       inputMode="decimal"
-                      pattern="[0-9]*"
+                      pattern="[0-9]*[.,]?[0-9]*"
                       placeholder="65"
                       value={form.targetWeight}
-                      onChange={(e) => set('targetWeight', e.target.value)}
+                      onChange={(e) => set('targetWeight', sanitizeDecimalInput(e.target.value))}
                     />
                   </div>
                 </div>
