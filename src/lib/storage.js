@@ -82,9 +82,18 @@ export async function getWeightLog() {
 
 export async function addWeightEntry(kg) {
   const log = await getWeightLog();
-  log.push({ date: new Date().toISOString().split('T')[0], kg });
+  const now = new Date();
+  log.push({ date: now.toISOString().split('T')[0], ts: now.getTime(), kg });
   const ok = await idbSet('weight_log', log);
   if (!ok) throw new Error(StorageError.WEIGHT_LOG);
+}
+
+export async function deleteWeightEntry(ts) {
+  const log = await getWeightLog();
+  const next = log.filter((e) => e?.ts !== ts);
+  const ok = await idbSet('weight_log', next);
+  if (!ok) throw new Error(StorageError.WEIGHT_LOG);
+  return next;
 }
 
 export function getCheckIns() {

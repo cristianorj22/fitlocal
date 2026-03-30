@@ -3,17 +3,17 @@ import { hapticLight, hapticSuccess } from '../lib/haptics';
 import { audioTick, audioSuccess } from '../lib/audio';
 import { bmiCategory } from '../lib/fitness';
 import WeightChart from '../components/WeightChart';
-import { CheckCircle, Plus, Beef, Wheat, Droplets } from 'lucide-react';
+import { CheckCircle, Plus, Beef, Wheat, Droplets, Trash2 } from 'lucide-react';
 import InfoTooltip from '../components/InfoTooltip';
 import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
 import { toast } from '@/components/ui/use-toast';
-import { useProfile, useWeightLog, useCheckedIn, useCheckIn, useAddWeight } from '../lib/queries';
+import { useProfile, useWeightLog, useCheckedIn, useCheckIn, useAddWeight, useDeleteWeight } from '../lib/queries';
 import StreakBadge from '../components/StreakBadge';
 import { useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
-import { parseFiniteDecimal, sanitizeDecimalInput } from '../lib/numeric';
+import { parseFiniteDecimal, clampDigits, formatKg1dpFromDigits, parseKg1dpFromDigits } from '../lib/numeric';
 
 function bmiCatKey(bmi) {
   if (bmi < 18.5) return 'underweight';
@@ -24,13 +24,14 @@ function bmiCatKey(bmi) {
 
 export default function Dashboard() {
   const qc = useQueryClient();
-  const { t, formatDate } = useI18n();
+  const { t, formatDate, locale } = useI18n();
   const { data: profile } = useProfile();
   const { data: weightLog = [] } = useWeightLog();
   const { data: checkedIn = false } = useCheckedIn();
   const checkIn = useCheckIn();
   const addWeight = useAddWeight();
-  const [newWeight, setNewWeight] = useState('');
+  const deleteWeight = useDeleteWeight();
+  const [newWeightDigits, setNewWeightDigits] = useState('');
   const [showAddWeight, setShowAddWeight] = useState(false);
 
   if (!profile) return null;
@@ -39,8 +40,19 @@ export default function Dashboard() {
   const bmiInfo = bmiCategory(bmi);
   const bmiLabel = t(`bmiCats.${bmiCatKey(bmi)}`);
 
+  const lastWeightKg =
+    Number.isFinite(weightLog?.[weightLog.length - 1]?.kg)
+      ? weightLog[weightLog.length - 1].kg
+      : parseFiniteDecimal(profile.weight);
+  const lastWeightKgNum = Number.isFinite(lastWeightKg) ? lastWeightKg : null;
+  const suggestion400g =
+    lastWeightKgNum !== null ? lastWeightKgNum + 0.4 : null; // 400g = 0.4kg
+
+  const decimalSeparator = String(locale || '').startsWith('pt') ? ',' : '.';
+  const newWeightDisplay = formatKg1dpFromDigits(newWeightDigits, { decimalSeparator });
+
   const handleAddWeight = () => {
-    const kg = parseFiniteDecimal(newWeight);
+    const kg = parseKg1dpFromDigits(newWeightDigits) ?? parseFiniteDecimal(newWeightDisplay);
     if (kg === null) {
       toast({
         variant: 'destructive',
@@ -52,7 +64,7 @@ export default function Dashboard() {
     hapticLight();
     audioTick();
     addWeight.mutate(kg);
-    setNewWeight('');
+    setNewWeightDigits('');
     setShowAddWeight(false);
   };
 
@@ -67,6 +79,22 @@ export default function Dashboard() {
     const done = Math.abs(current - start);
     return Math.min(100, Math.round((done / total) * 100));
   })();
+
+  const recentWeights = [...(weightLog || [])]
+    .filter((e) => Number.isFinite(e?.kg))
+    .sort((a, b) => (b?.ts || 0) - (a?.ts || 0))
+    .slice(0, 5);
+
+  const formatTs = (ts) => {
+    try {
+      if (!ts) return '';
+      const d = new Date(ts);
+      const loc = String(locale || '').startsWith('pt') ? 'pt-BR' : 'en-US';
+      return d.toLocaleString(loc, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '';
+    }
+  };
 
   const handleRefresh = async () => {
     await qc.invalidateQueries({ queryKey: KEYS.profile });
@@ -181,16 +209,24 @@ export default function Dashboard() {
 
         <div className="bg-card border border-border rounded-2xl p-4">
           {showAddWeight ? (
-            <div className="flex gap-3">
-              <input
-                inputMode="decimal"
-                pattern="[0-9]*[.,]?[0-9]*"
-                className="flex-1 min-h-[44px] bg-muted border border-border rounded-xl px-4 py-3 text-foreground text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
-                placeholder={t('dashboard.weightPlaceholder')}
-                value={newWeight}
-                onChange={(e) => setNewWeight(sanitizeDecimalInput(e.target.value))}
-                autoFocus
-              />
+            <div className="flex gap-3 items-end">
+              <div className="flex-1">
+                <input
+                  inputMode="decimal"
+                  pattern="[0-9]*[.,]?[0-9]*"
+                  className="w-full min-h-[44px] bg-muted border border-border rounded-xl px-4 py-3 text-foreground text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition-colors"
+                  placeholder={t('dashboard.weightPlaceholder')}
+                  value={newWeightDisplay}
+                  onChange={(e) => setNewWeightDigits(clampDigits(e.target.value, 4))}
+                  autoFocus
+                />
+                <p className="text-[11px] text-muted-foreground mt-2">
+                  {t('dashboard.weightCurrentHelp')}
+                  {suggestion400g !== null
+                    ? ` ${t('dashboard.weightSuggestion400g', { last: Number(lastWeightKgNum).toFixed(1), lastPlus: suggestion400g.toFixed(1) })}`
+                    : ''}
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={handleAddWeight}
@@ -201,7 +237,7 @@ export default function Dashboard() {
               </button>
               <button
                 type="button"
-                onClick={() => { setShowAddWeight(false); setNewWeight(''); }}
+                onClick={() => { setShowAddWeight(false); setNewWeightDigits(''); }}
                 className="px-4 py-3 bg-muted rounded-xl text-sm text-muted-foreground"
               >
                 {t('dashboard.cancel')}
@@ -216,6 +252,33 @@ export default function Dashboard() {
             >
               <Plus className="w-5 h-5" /> {t('dashboard.logWeight')}
             </button>
+          )}
+
+          {recentWeights.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-border">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted-foreground">{t('dashboard.weightHistory')}</span>
+              </div>
+              <div className="space-y-2">
+                {recentWeights.map((e) => (
+                  <div key={e.ts} className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-foreground">{e.kg.toFixed(1)} kg</div>
+                      <div className="text-xs text-muted-foreground">{formatTs(e.ts) || e.date}</div>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label={t('dashboard.removeEntry')}
+                      onClick={() => deleteWeight.mutate(e.ts)}
+                      disabled={deleteWeight.isPending}
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-muted border border-border text-muted-foreground disabled:opacity-60"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>

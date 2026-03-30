@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/components/ui/use-toast';
 import {
   getProfile, saveProfile,
-  getWeightLog, addWeightEntry,
+  getWeightLog, addWeightEntry, deleteWeightEntry,
   getTodayCheckedIn, addCheckIn,
   getPhotos, savePhoto, deletePhoto,
   StorageError,
@@ -100,9 +100,10 @@ export const useAddWeight = () => {
       await qc.cancelQueries({ queryKey: KEYS.weightLog });
       const prev = qc.getQueryData(KEYS.weightLog);
       // Same shape as addWeightEntry in storage (YYYY-MM-DD)
+      const now = Date.now();
       qc.setQueryData(KEYS.weightLog, (old = []) => [
         ...old,
-        { kg, date: todayYmd() },
+        { kg, date: todayYmd(), ts: now },
       ]);
       return { prev };
     },
@@ -120,6 +121,26 @@ export const useAddWeight = () => {
       // Sync widget data after weight entry
       const profile = getProfile();
       if (profile) syncWidgetData(profile, newLog).catch(() => {});
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
+  });
+};
+
+export const useDeleteWeight = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (ts) => {
+      return await deleteWeightEntry(ts);
+    },
+    onMutate: async (ts) => {
+      await qc.cancelQueries({ queryKey: KEYS.weightLog });
+      const prev = qc.getQueryData(KEYS.weightLog);
+      qc.setQueryData(KEYS.weightLog, (old = []) => old.filter((e) => e?.ts !== ts));
+      return { prev };
+    },
+    onError: (err, _vars, ctx) => {
+      qc.setQueryData(KEYS.weightLog, ctx?.prev);
+      notifyMutationError(err, 'errors.weight');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: KEYS.weightLog }),
   });
