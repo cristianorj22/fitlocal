@@ -103,3 +103,30 @@ export function vo2Category(vo2, age, gender) {
   }
   return row.labels[row.labels.length - 1];
 }
+
+/**
+ * Daily water intake: 30–40 ml/kg/day (uses 35 ml/kg midpoint).
+ * Returns liters. Handles both kg and lbs (converts lbs→kg if unit provided).
+ */
+export function calcDailyWater(weight, unit = 'kg') {
+  const kg = unit === 'lbs' ? weight / 2.205 : weight;
+  return Math.round((kg * 35) / 100) / 10; // liters, 1 decimal
+}
+
+/**
+ * Recommended sleep hours based on age + activity.
+ * Sources: NSF, ACSM guidelines.
+ */
+export function calcSleepHours(age, activityLevel = 'moderate', goal = 'maintenance') {
+  let base;
+  if (age < 18) base = 9;
+  else if (age < 26) base = 8;
+  else if (age < 65) base = 7.5;
+  else base = 7;
+
+  // Active people and hypertrophy/endurance goals need more recovery
+  const activeBonus = ['active', 'very_active'].includes(activityLevel) ? 0.5 : 0;
+  const goalBonus = ['hypertrophy', 'endurance'].includes(goal) ? 0.5 : 0;
+
+  return Math.min(10, Math.round((base + activeBonus + goalBonus) * 2) / 2);
+}

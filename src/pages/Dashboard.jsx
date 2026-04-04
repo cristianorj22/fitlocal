@@ -3,7 +3,11 @@ import { hapticLight, hapticSuccess } from '../lib/haptics';
 import { audioTick, audioSuccess } from '../lib/audio';
 import { bmiCategory } from '../lib/fitness';
 import WeightChart from '../components/WeightChart';
-import { CheckCircle, Plus, Beef, Wheat, Droplets, Trash2 } from 'lucide-react';
+import WaterCard from '../components/WaterCard';
+import SleepCard from '../components/SleepCard';
+import MonthlyProjection from '../components/MonthlyProjection';
+import PerformanceCard from '../components/PerformanceCard';
+import { CheckCircle, Plus, Beef, Wheat, Flame, Trash2 } from 'lucide-react';
 import InfoTooltip from '../components/InfoTooltip';
 import PullToRefresh from '../components/PullToRefresh';
 import { motion } from 'framer-motion';
@@ -166,7 +170,7 @@ export default function Dashboard() {
             {[
               { icon: Beef, labelKey: 'dashboard.protein', val: macros.protein, unit: 'g', color: 'text-red-400' },
               { icon: Wheat, labelKey: 'dashboard.carbs', val: macros.carbs, unit: 'g', color: 'text-yellow-400' },
-              { icon: Droplets, labelKey: 'dashboard.fat', val: macros.fat, unit: 'g', color: 'text-blue-400' },
+              { icon: Flame, labelKey: 'dashboard.fat', val: macros.fat, unit: 'g', color: 'text-amber-400' },
             ].map(({ icon: Icon, labelKey, val, unit, color }) => (
               <div key={labelKey} className="text-center">
                 <Icon className={`w-5 h-5 mx-auto mb-1 ${color}`} />
@@ -206,6 +210,14 @@ export default function Dashboard() {
         )}
 
         <WeightChart log={weightLog} targetWeight={targetWeight} />
+
+        <div className="grid grid-cols-2 gap-3">
+          <WaterCard profile={profile} t={t} />
+          <SleepCard profile={profile} t={t} />
+        </div>
+
+        <MonthlyProjection profile={profile} t={t} />
+        <PerformanceCard profile={profile} t={t} />
 
         <div className="bg-card border border-border rounded-2xl p-4">
           {showAddWeight ? (

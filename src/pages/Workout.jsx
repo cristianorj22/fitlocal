@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { hapticMedium, hapticSuccess } from '../lib/haptics';
 import { audioComplete, audioSuccess } from '../lib/audio';
-import { getWorkoutPlan, restTimeByGoal } from '../lib/exercises';
+import { getExercisesForGroup, MUSCLE_GROUPS, restTimeByGoal } from '../lib/exercises';
 import { getExerciseMedia } from '../lib/exerciseMedia';
 import PullToRefresh from '../components/PullToRefresh';
 import RestTimer from '../components/RestTimer';
-import { ChevronDown, ChevronUp, Zap } from 'lucide-react';
+import ExerciseAlternatives from '../components/ExerciseAlternatives';
+import { ChevronDown, ChevronUp, Zap, RefreshCw } from 'lucide-react';
 import { useProfile } from '../lib/queries';
 import { useI18n } from '../contexts/LocaleContext.jsx';
 import { tFor } from '../lib/locale-messages.js';
@@ -15,6 +16,12 @@ const TYPE_COLORS = {
   compound: 'bg-emerald-500/20 text-emerald-400',
   isolation: 'bg-blue-500/20 text-blue-400',
   cardio: 'bg-orange-500/20 text-orange-400',
+};
+
+const LEVEL_COLORS = {
+  Beginner: 'bg-emerald-500/20 text-emerald-400',
+  Intermediate: 'bg-amber-500/20 text-amber-400',
+  Advanced: 'bg-red-500/20 text-red-400',
 };
 
 function exerciseDisplayName(ex, locale) {
@@ -33,14 +40,9 @@ function exerciseDisplayDescription(ex, locale) {
   return ex.desc;
 }
 
-/** English muscle/split label from exercises → locale key slug (no slashes in path). */
-function muscleGroupKey(raw) {
-  return raw.replace(/[/\s]+/g, '_');
-}
-
 function translateMuscleGroup(raw, locale) {
   const L = normalizeLocale(locale);
-  const key = `muscleGroups.${muscleGroupKey(raw)}`;
+  const key = `muscleGroups.${raw.replace(/[/\s]+/g, '_')}`;
   const translated = tFor(L, key);
   if (translated && translated !== key) return translated;
   return raw;
@@ -49,15 +51,18 @@ function translateMuscleGroup(raw, locale) {
 export default function Workout() {
   const { data: profile } = useProfile();
   const { t, locale } = useI18n();
-  const [selectedDay, setSelectedDay] = useState(0);
+  const [selectedGroup, setSelectedGroup] = useState('Full Body');
   const [expandedEx, setExpandedEx] = useState(null);
   const [completed, setCompleted] = useState({});
   const [restTimerSeconds, setRestTimerSeconds] = useState(90);
 
-  const plan = useMemo(() => (profile ? getWorkoutPlan(profile) : []), [profile]);
-  const dayData = plan[selectedDay];
+  const exercises = useMemo(
+    () => (profile ? getExercisesForGroup(selectedGroup, profile) : []),
+    [profile, selectedGroup]
+  );
+
   const restDefault = profile ? restTimeByGoal[profile.goal] || 90 : 90;
-  const total = dayData?.exercises?.length || 0;
+  const total = exercises.length;
   const completedCount = Object.values(completed).filter(Boolean).length;
 
   useEffect(() => {
@@ -68,6 +73,12 @@ export default function Workout() {
   }, [completedCount, total]);
 
   if (!profile) return null;
+
+  const switchGroup = (g) => {
+    setSelectedGroup(g);
+    setCompleted({});
+    setExpandedEx(null);
+  };
 
   const toggleComplete = (ex) => {
     setCompleted((c) => {
@@ -97,42 +108,39 @@ export default function Workout() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="max-w-lg mx-auto p-5 space-y-5">
-        <div className="pt-4">
-          <h1 className="text-2xl font-bold">{t('workout.title')}</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t(`goals.${profile.goal}`)} · {t(`sessionOpts.${profile.sessionLength}`)} {t('workout.sessionWord')}
-          </p>
+        <div className="pt-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-muted-foreground">{t('workout.todaysPlan')}</p>
+            <h1 className="text-2xl font-bold">{t('workout.title')}</h1>
+          </div>
+          <button
+            type="button"
+            onClick={() => switchGroup(selectedGroup)}
+            className="flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-card border border-border text-sm text-muted-foreground"
+          >
+            <RefreshCw className="w-4 h-4" /> {t('workout.newPlan')}
+          </button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {plan.map((d, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-pressed={selectedDay === i}
-              aria-label={`${t('workout.day')} ${d.day}${
-                d.muscles?.length ? ': ' + d.muscles.map((m) => translateMuscleGroup(m, locale)).join(', ') : ''
-              }`}
-              onClick={() => {
-                setSelectedDay(i);
-                setCompleted({});
-                setExpandedEx(null);
-              }}
-              className={`flex-shrink-0 px-4 py-3 min-h-[44px] rounded-xl text-sm font-medium transition-all ${
-                selectedDay === i ? 'bg-emerald-500 text-white' : 'bg-card border border-border text-muted-foreground'
-              }`}
-            >
-              {t('workout.day')} {d.day}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {dayData?.muscles?.map((m) => (
-            <span key={m} className="px-3 py-1 bg-muted rounded-lg text-xs text-foreground">
-              {translateMuscleGroup(m, locale)}
-            </span>
-          ))}
+        <div>
+          <p className="text-xs text-muted-foreground mb-2">{t('workout.chooseMuscle')}</p>
+          <div className="flex gap-2 flex-wrap">
+            {MUSCLE_GROUPS.map((g) => (
+              <button
+                key={g}
+                type="button"
+                aria-pressed={selectedGroup === g}
+                onClick={() => switchGroup(g)}
+                className={`px-3 py-2 min-h-[36px] rounded-xl text-sm font-medium transition-all ${
+                  selectedGroup === g
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-card border border-border text-muted-foreground'
+                }`}
+              >
+                {translateMuscleGroup(g, locale)}
+              </button>
+            ))}
+          </div>
         </div>
 
         {total > 0 && (
@@ -152,13 +160,20 @@ export default function Workout() {
           </div>
         )}
 
+        {total === 0 && (
+          <div className="bg-card border border-border rounded-2xl p-6 text-center text-muted-foreground">
+            <p className="text-sm">{t('workout.noExercises')}</p>
+          </div>
+        )}
+
         <div className="space-y-3">
-          {dayData?.exercises?.map((ex, i) => {
+          {exercises.map((ex, i) => {
             const media = getExerciseMedia(ex.exerciseId, profile.gender || 'male');
             const showHint = media?.kind === 'image' && expandedEx !== i;
             const displayName = exerciseDisplayName(ex, locale);
             const descText = exerciseDisplayDescription(ex, locale);
             const typeLabel = t(`types.${ex.type}`);
+            const levelLabel = ex.level || '';
 
             return (
               <div
@@ -171,7 +186,6 @@ export default function Workout() {
                   type="button"
                   className="w-full flex items-center gap-2 p-4 text-left"
                   aria-expanded={expandedEx === i}
-                  aria-controls={`ex-detail-${i}`}
                   onClick={() => openExercise(i, ex)}
                 >
                   <span
@@ -205,7 +219,11 @@ export default function Workout() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold">{displayName}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${TYPE_COLORS[ex.type]}`}>{typeLabel}</span>
+                      {levelLabel && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${LEVEL_COLORS[levelLabel] || TYPE_COLORS[ex.type]}`}>
+                          {levelLabel}
+                        </span>
+                      )}
                     </div>
                     {showHint && (
                       <p className="text-xs text-muted-foreground/80 mt-1">{t('workout.tapForIllustration')}</p>
@@ -226,12 +244,7 @@ export default function Workout() {
                 </button>
 
                 {expandedEx === i && (
-                  <div
-                    id={`ex-detail-${i}`}
-                    role="region"
-                    aria-label={`${displayName} details`}
-                    className="px-4 pb-4 pt-0"
-                  >
+                  <div id={`ex-detail-${i}`} role="region" aria-label={`${displayName} details`} className="px-4 pb-4 pt-0">
                     {(() => {
                       if (media?.kind !== 'image') return null;
                       return (
@@ -249,6 +262,7 @@ export default function Workout() {
                       );
                     })()}
                     <p className="text-sm text-muted-foreground border-t border-border pt-3 mt-3">{descText}</p>
+                    <ExerciseAlternatives alternatives={ex.alternatives} locale={locale} />
                   </div>
                 )}
               </div>

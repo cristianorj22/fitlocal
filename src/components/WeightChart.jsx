@@ -17,9 +17,7 @@ const C = {
 export default function WeightChart({ log, targetWeight }) {
   const { t } = useI18n();
 
-  // #region agent log
-  fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'WeightChart.jsx:entry',message:'WeightChart render',data:{logLen:log?.length,typeofT:typeof t,firstDate:log?.[0]?.date},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
+
   if (!log || log.length === 0) {
     return (
       <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-center h-48 text-muted-foreground text-sm">
@@ -47,9 +45,7 @@ export default function WeightChart({ log, targetWeight }) {
       </div>
     );
   }
-  // #region agent log
-  fetch('http://127.0.0.1:7492/ingest/b62ba8d1-46e5-416f-b1b6-80561aba873c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e3a121'},body:JSON.stringify({sessionId:'e3a121',location:'WeightChart.jsx:afterMap',message:'chart data mapped',data:{dataLen:data?.length,sampleKg:data?.[data.length-1]?.kg},timestamp:Date.now(),hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
+
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload?.length) {
